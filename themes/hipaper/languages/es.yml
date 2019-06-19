@@ -1,0 +1,35 @@
+home: Home
+archives: Archivo
+about: Sobre mí
+categories: Categorías
+search: Buscar
+tags: Tags
+tagcloud: Nube de Tags
+tweets: Tweets
+prev: Anterior
+next: Siguiente
+comment: Comentarios
+archive_a: Archivados
+archive_b: "Archivados: %s"
+page: Página %d
+recent_posts: Recientes
+newer: Nuevo
+older: Anterior
+share: Compartir
+theme_by: Theme by
+rss_feed: RSS
+category: Categoría
+tag: Tag
+connect: 'Contacta conmigo'
+post_total_count: Hay %d posts en total hasta ahora.
+read_more: más →
+contents: Contenidos
+none: Ninguno
+insight:
+    hint: 'Escribe algo...'
+    posts: 'Posts'
+    pages: 'Páginas'
+    categories: 'Categorías'
+    tags: 'Tags'
+    untitled: '(sin título)'
+powered_by: Construido por
