@@ -2,23 +2,26 @@
   <% if (theme.sidebar === 'bottom'){ %>
     <%- partial('_partial/sidebar') %>
   <% } %>
-
   <div class="clearfix container">
+      <% if (theme.social){ %>
+        <div class="widget-wrap">
+          <div class="widget widget_athemes_social_icons">
+            <ul class="clearfix widget-social-icons">   
+            <% Object.keys(theme.social).forEach(function(key) { %>
+              <li><a href="<%= theme.social[key] %>" title="<%=key.trim()%>"><i class="fa fa-<%= key.toLowerCase() %>" aria-hidden="true"></i></a></li> 
+            <% }) %>
+            </ul>
+          </div>
+        </div>
+      <% } %>
       <div class="site-info">
 	      &copy; <%= date(new Date(), 'YYYY') %> <%= config.title || config.author %> All Rights Reserved.
-        <% if (theme.busuanzi_analytics){ %>
-            <span id="busuanzi_container_site_uv">
-              <span id="busuanzi_value_site_uv"></span>
-              <span id="busuanzi_value_site_pv"></span>
-            </span>
-          <% } %>
       </div>
       <div class="site-credit">
         <%= __('theme_by') %> <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
       </div>
   </div>
 </footer>
-
 
 <!-- min height -->
 
@@ -28,7 +31,6 @@
 
     wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
     contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
-
 
     <!-- headerblur min height -->
     <% if (is_current("about", false) && theme.about_big_image){ %>

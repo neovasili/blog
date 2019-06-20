@@ -3,8 +3,8 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: mi blog  # The title of your website
-subtitle: de los infiernos  # The subtitle of your website
+title: neovasili's blog  # The title of your website
+subtitle: welcome to hell, rookie!  # The subtitle of your website
 description:  # The description of your website
 keywords:  # Keywords of the website
 author: Juan Manuel Ruiz Fernández  # Author name
@@ -41,7 +41,7 @@ future: true
 highlight:
   enable: true
   line_number: true
-  auto_detect: false
+  auto_detect: true
   tab_replace:
   
 # Home page setting
