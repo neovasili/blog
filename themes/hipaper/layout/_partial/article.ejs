@@ -5,11 +5,17 @@
       <header class="article-header">
         <%- partial('post/title', {class_name: 'article-title'}) %>
       </header>
-    <% } %>
-    <div class="article-meta">
-      <%- partial('post/date', {class_name: 'article-date', date_format: null}) %>
-      <%- partial('post/category') %> 
-      <%- partial('post/busuanzi-analytics',{index: index}) %>
+      <% } %>
+      <div class="article-meta">
+        <%- partial('post/date', {class_name: 'article-date', date_format: null}) %>
+        <%- partial('post/category') %> 
+        <div class="article-read-metrics">
+          <span class="column is-narrow">
+            <% let words = word_count(post.content); %>
+            <% let time = duration((words / 150.0) * 60, 'seconds') %>
+            <%= `${ time.humanize() } ${ __('article.read')} (${ __('article.about') } ${ words } ${ __('article.words') })` %>
+          </span>
+        </div>
     </div>
     <div class="article-entry" itemprop="articleBody">
       <% if (post.excerpt && index){ %>

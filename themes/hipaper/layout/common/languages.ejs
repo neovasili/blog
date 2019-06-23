@@ -1,0 +1,24 @@
+<% const languages = display_languages();
+
+if (languages.length > 1) {%>
+    <div class="dropdown" onclick="openLanguageSelector( this )">
+        <div class="dropdown-trigger">
+            <span class="icon is-small">
+                <i class="fas fa-angle-down" aria-hidden="true"></i>
+            </span>
+            <span><%= __( language_name(page_language()) ) %></span>
+            <span class="icon">
+                <i class="fas fa-globe"></i>
+            </span>
+        </div>
+        <div class="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+                <% languages.forEach((language) => { %>
+                    <a href="<%= url_for(i18n_path(!is_default_language(language) ? language : null)) %>" class="dropdown-item">
+                        <%= __( language_name(language) ) %>
+                    </a>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+<%} %>
