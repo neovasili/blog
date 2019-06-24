@@ -74,6 +74,12 @@ li.language {
     padding: 0;
 }
 
+.widget ul.archive-list,
+.widget ul.tag-list,
+.widget ul.category-list {
+    display: inline-block;
+} 
+
 @media only screen and ( max-width: 60em ) {
     #container #main-nav-mobile {
         display: inline-block;

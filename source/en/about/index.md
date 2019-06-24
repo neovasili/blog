@@ -2,7 +2,7 @@
 title: Sobre mí
 date: 2019-06-20 21:18:32
 ---
-![En Brooklyn, con vistas a Manhatan](index/about-me.jpg "Simplemente yo")
+![En Brooklyn, con vistas a Manhatan](../../images/about-me.jpg "Simplemente yo")
 
 EN INGLÉS
 

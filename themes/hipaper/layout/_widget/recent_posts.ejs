@@ -1,11 +1,14 @@
-<% if (site.posts.length){ %>
+
+<% const posts_filtered_list = post_filter_by_lang( site.posts, page_language() ) %>
+
+<% if ( posts_filtered_list.length ){ %>
   <div class="widget_athemes_tabs">
     <ul id="widget-tab" class="clearfix widget-tab-nav">
       <li class="active"><a><%= __('recent_posts') %></a></li>
     </ul>
     <div class="widget">
       <ul>
-        <% site.posts.sort('date', -1).limit(6).each(function(post){ %>
+        <% posts_filtered_list.sort('date', -1).limit(6).each(function(post){ %>
           <li class="clearfix">
 
             <% if (post.photos != ""){ %>

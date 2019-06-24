@@ -115,6 +115,10 @@ hexo.extend.helper.register('word_count', (content) => {
     return content ? (content.match(/[\u00ff-\uffff]|[a-zA-Z]+/g) || []).length : 0;
 });
 
+hexo.extend.helper.register( 'post_filter_by_lang', ( posts_list, language ) => {
+    return posts_list.filter( post => post.lang == language );
+} );
+
 /**
  * Export a list of headings of an article
  * [

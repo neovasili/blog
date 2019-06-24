@@ -2,7 +2,7 @@
 title: Sobre mí
 date: 2019-06-20 21:18:32
 ---
-![En Brooklyn, con vistas a Manhatan](index/about-me.jpg "Simplemente yo")
+![En Brooklyn, con vistas a Manhatan](../images/about-me.jpg "Simplemente yo")
 
 Como supongo que le pasa a todo el mundo, definirme no es nada sencillo, tengo la mala costumbre de tratar de querer decir más cosas de las que realmente son asimilables en un corto período de tiempo, así que trataré de ser breve, aunque no será fácil.
 
