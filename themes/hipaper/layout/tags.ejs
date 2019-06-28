@@ -24,11 +24,13 @@
             </div>
             <div class="archives">
                 <% tag.posts.sort('-date').map(function(post, i){  %>
-                    <%- partial('_partial/archive-post', {post: post, index: true}) %>
-                    <% if (post.subtitle && post.subtitle.length) { %>
-                        <h3 class="post-subtitle">
-                            <%- post.subtitle %>
-                        </h3>
+                    <% if( post.lang == page_language() ) { %>
+                        <%- partial('_partial/archive-post', {post: post, index: true}) %>
+                        <% if (post.subtitle && post.subtitle.length) { %>
+                            <h3 class="post-subtitle">
+                                <%- post.subtitle %>
+                            </h3>
+                        <% } %>
                     <% } %>
                 <% }) %>
             </div>

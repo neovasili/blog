@@ -5,8 +5,8 @@
     <h3 class="widget-title"><%= __('archive_a') %></h3>
 
     <div class="widget">
-      <%- list_archives({show_count: false, type: theme.archive_type}) %>
-      <span>(<%= posts_filtered_list.length %>)</span>
+      <%- power_list_archives({show_count: theme.show_count, type: theme.archive_type}) %>
+      <!-- <span>(<%= posts_filtered_list.length %>)</span> -->
     </div>
   </div>
 <% } %>

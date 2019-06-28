@@ -188,3 +188,283 @@ hexo.extend.filter.register('after_post_render', function (data) {
     data.excerpt = data.excerpt ? patchCodeHighlight(data.excerpt) : data.excerpt;
     return data;
 });
+
+hexo.extend.helper.register( 'power_list_archives', function (options = {}) {
+    const { config } = this;
+    const archiveDir = config.archive_dir;
+    const { timezone } = config;
+    const lang = this.page.lang || this.page.language || config.language;
+    let { format } = options;
+    const type = options.type || 'monthly';
+    const { style = 'list', transform, separator = ', ' } = options;
+    const showCount = options.hasOwnProperty('show_count') ? options.show_count : true;
+    const className = options.class || 'archive';
+    const order = options.order || -1;
+    let result = '';
+  
+    if (!format) {
+      format = type === 'monthly' ? 'MMMM YYYY' : 'YYYY';
+    }
+  
+    const posts = this.site.posts.sort('date', order).filter( post => post.lang == lang );
+    if (!posts.length) return result;
+  
+    const data = [];
+    let length = 0;
+  
+    posts.forEach(post => {
+      // Clone the date object to avoid pollution
+      let date = post.date.clone();
+  
+      if (timezone) date = date.tz(timezone);
+      if (lang) date = date.locale(lang);
+  
+      const year = date.year();
+      const month = date.month() + 1;
+      const name = date.format(format);
+      const lastData = data[length - 1];
+  
+      if (!lastData || lastData.name !== name) {
+        length = data.push({
+          name,
+          year,
+          month,
+          count: 1
+        });
+      } else {
+        lastData.count++;
+      }
+    });
+  
+    const link = item => {
+      let url = `${archiveDir}/${item.year}/`;
+  
+      if (type === 'monthly') {
+        if (item.month < 10) url += '0';
+        url += `${item.month}/`;
+      }
+  
+      return this.url_for(url);
+    };
+  
+    if (style === 'list') {
+      result += `<ul class="${className}-list">`;
+  
+      for (let i = 0, len = data.length; i < len; i++) {
+        const item = data[i];
+  
+        result += `<li class="${className}-list-item">`;
+  
+        result += `<a class="${className}-list-link" href="${link(item)}">`;
+        result += transform ? transform(item.name) : item.name;
+        result += '</a>';
+  
+        if (showCount) {
+          result += `<span class="${className}-list-count">${item.count}</span>`;
+        }
+  
+        result += '</li>';
+      }
+  
+      result += '</ul>';
+    } else {
+      for (let i = 0, len = data.length; i < len; i++) {
+        const item = data[i];
+  
+        if (i) result += separator;
+  
+        result += `<a class="${className}-link" href="${link(item)}">`;
+        result += transform ? transform(item.name) : item.name;
+  
+        if (showCount) {
+          result += `<span class="${className}-count">${item.count}</span>`;
+        }
+  
+        result += '</a>';
+      }
+    }
+  
+    return result;
+  });
+
+hexo.extend.helper.register( 'power_list_categories', function (categories, options) {
+    if (!options && (!categories || !categories.hasOwnProperty('length'))) {
+      options = categories;
+      categories = this.site.categories;
+    }
+  
+    if (!categories || !categories.length) return '';
+    options = options || {};
+  
+    const { style = 'list', transform, separator = ', ', suffix = '' } = options;
+    const showCount = options.hasOwnProperty('show_count') ? options.show_count : true;
+    const className = options.class || 'category';
+    const lang = this.page.lang || this.page.language || config.language;
+    const depth = options.depth ? parseInt(options.depth, 10) : 0;
+    const orderby = options.orderby || 'name';
+    const order = options.order || 1;
+    const showCurrent = options.show_current || false;
+    const childrenIndicator = options.hasOwnProperty('children_indicator') ? options.children_indicator : false;
+  
+    const prepareQuery = parent => {
+      const query = {};
+  
+      if (parent) {
+        query.parent = parent;
+      } else {
+        query.parent = {$exists: false};
+      }
+  
+      return categories.find(query).sort(orderby, order).filter(cat => cat.length);
+    };
+  
+    const hierarchicalList = (level, parent) => {
+      let result = '';
+  
+      prepareQuery(parent).forEach((cat, i) => {
+        let child;
+        let posts_list = cat.posts.filter( post => post.lang == lang );
+        let posts_list_size = posts_list.length;
+
+        if (!depth || level + 1 < depth) {
+          child = hierarchicalList(level + 1, cat._id);
+        }
+  
+        let isCurrent = false;
+        if (showCurrent && this.page) {
+          for (let j = 0; j < posts_list_size; j++) {
+            const post = posts_list.data[j];
+                if (post && post._id === this.page._id) {
+                    isCurrent = true;
+                    break;
+                }
+          }
+  
+          // special case: category page
+          isCurrent = isCurrent || (this.page.base && this.page.base.startsWith(cat.path));
+        }
+  
+        const additionalClassName = child && childrenIndicator ? ` ${childrenIndicator}` : '';
+  
+        result += `<li class="${className}-list-item${additionalClassName}">`;
+  
+        result += `<a class="${className}-list-link${isCurrent ? ' current' : ''}" href="${this.url_for(cat.path)}${suffix}">`;
+        result += transform ? transform(cat.name) : cat.name;
+        result += '</a>';
+  
+        if (showCount) {
+          result += `<span class="${className}-list-count">${posts_list_size}</span>`;
+        }
+  
+        if (child) {
+          result += `<ul class="${className}-list-child">${child}</ul>`;
+        }
+  
+        result += '</li>';
+      });
+  
+      return result;
+    };
+  
+    const flatList = (level, parent) => {
+      let result = '';
+  
+      prepareQuery(parent).forEach((cat, i) => {
+        let posts_list = cat.posts.filter( post => post.lang == lang );
+        let posts_list_size = posts_list.length;
+
+        if (i || level) result += separator;
+  
+        result += `<a class="${className}-link" href="${this.url_for(cat.path)}${suffix}">`;
+        result += transform ? transform(cat.name) : cat.name;
+  
+        if (showCount) {
+          result += `<span class="${className}-count">${posts_list_size}</span>`;
+        }
+  
+        result += '</a>';
+  
+        if (!depth || level + 1 < depth) {
+          result += flatList(level + 1, cat._id);
+        }
+      });
+  
+      return result;
+    };
+  
+    if (style === 'list') {
+      return `<ul class="${className}-list">${hierarchicalList(0)}</ul>`;
+    }
+  
+    return flatList(0);
+});
+
+hexo.extend.helper.register( 'power_list_tags', function( tags, options ) {
+    
+  
+  if (!options && (!tags || !tags.hasOwnProperty('length'))) {
+    options = tags;
+    tags = this.site.tags;
+  }
+  
+  if (!tags || !tags.length) return '';
+  options = options || {};
+  
+    const { style = 'list', transform, separator = ', ', suffix = '' } = options;
+    const showCount = options.hasOwnProperty('show_count') ? options.show_count : true;
+    const className = options.class || 'tag';
+    const lang = this.page.lang || this.page.language || config.language;
+    const orderby = options.orderby || 'name';
+    const order = options.order || 1;
+    let result = '';
+  
+    // Ignore tags with zero posts
+    tags = tags.filter( tag => tag.length );
+
+    // Sort the tags
+    tags = tags.sort( orderby, order );
+  
+    // Limit the number of tags
+    if (options.amount) tags = tags.limit(options.amount);
+  
+    if (style === 'list') {
+      result += `<ul class="${className}-list">`;
+  
+      tags.forEach( tag => {
+        let tag_posts_lists = tag.posts.filter( post => post.lang == lang );
+        let tag_posts_size = tag_posts_lists.length;
+
+        result += `<li class="${className}-list-item">`;
+  
+        result += `<a class="${className}-list-link" href="${this.url_for(tag.path)}${suffix}">`;
+        result += transform ? transform(tag.name) : tag.name;
+        result += '</a>';
+  
+        if (showCount) {
+          result += `<span class="${className}-list-count">${tag_posts_size}</span>`;
+        }
+  
+        result += '</li>';
+      });
+  
+      result += '</ul>';
+    } else {
+      tags.forEach((tag, i) => {
+        let tag_posts_lists = tag.posts.filter( post => post.lang == lang );
+        let tag_posts_size = tag_posts_lists.length;
+
+        if (i) result += separator;
+  
+        result += `<a class="${className}-link" href="${this.url_for(tag.path)}${suffix}">`;
+        result += transform ? transform(tag.name) : tag.name;
+  
+        if (showCount) {
+          result += `<span class="${className}-count">${tag_posts_size}</span>`;
+        }
+  
+        result += '</a>';
+      });
+    }
+  
+    return result;
+});
