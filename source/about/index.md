@@ -18,6 +18,6 @@ Pero si hay una afición / hobby que destaca en mí son los videojuegos. Llevo _
 
 Aunque he pasado muchos años alejados de otra de mis grandes aficiones, últimamente he tenido la suerte de poder ir retomándola poco a poco y es que los _lego_ no son nada baratos, pero proporcionan interminables horas de diversión, concentración, creatividad y aprendizaje.
 
-Me encanta aprender, enfrentarme a nuevos retos y seguir aprendiendo, soy una mente inquieta como pocas. Me apasiona la ciencia y la práctica del deporte en general.
+Me encanta aprender, enfrentarme a nuevos retos y seguir aprendiendo, soy una mente inquieta como pocas. Me apasiona la ciencia y la práctica del deporte en general. Cualquiera que me conozca un poco, sabe a lo que me refiero.
 
 A nivel profesional, 
