@@ -11,6 +11,7 @@ before_install:
   - npm install -g hexo
 
 install:
+  - npm install -g travis-ci-cloudfront-invalidation
   - npm install
 
 script:
@@ -31,7 +32,4 @@ deploy:
   acl: public_read
 
 after_deploy:
-  # Allow `awscli` to make requests to CloudFront.
-  - aws configure set preview.cloudfront true
-  # Invalidate every object in the targeted distribution.
-  - aws cloudfront create-invalidation --distribution-id E2515A2ZDSBPQJ
+  - travis-ci-cloudfront-invalidation -a $AWS_ACCESS_KEY -s $AWS_SECRET_KEY -c $AWS_CLOUDFRONT_DIST_ID -i '/*' -b $TRAVIS_BRANCH -p $TRAVIS_PULL_REQUEST
