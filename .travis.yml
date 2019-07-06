@@ -15,8 +15,14 @@ script:
 
 before_deploy:
   - pip install awscli --upgrade --user
-  - if [ "$TRAVIS_BRANCH" = "develop" ]; then aws s3 rm s3://staging.juanmanuelruizfernandez.com --recursive
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then aws s3 rm s3://www.juanmanuelruizfernandez.com --recursive
+  - |
+    if [ "$TRAVIS_BRANCH" = "develop" ]; then 
+      aws s3 rm s3://staging.juanmanuelruizfernandez.com --recursive
+    fi
+  - |
+    if [ "$TRAVIS_BRANCH" = "master" ]; then 
+      aws s3 rm s3://www.juanmanuelruizfernandez.com --recursive
+    fi
 
 deploy:
   - provider: s3
