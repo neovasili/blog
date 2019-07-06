@@ -17,7 +17,7 @@ language: node_js
 # Every once in a while this should be bumped up
 # https://docs.travis-ci.com/user/languages/javascript-with-nodejs#Choosing-Node-versions-to-test-against
 node_js:
-- "10"
+  - node
 
 # Only create a new version on pushes to certain branches.
 branches:
@@ -25,10 +25,10 @@ branches:
   # - master
 
 before_install:
-- npm install -g hexo
+  - npm install -g hexo
 
 install:
-- npm install
+  - npm install
 
 # Notice: Replace 'YOUR NAME' and 'YOUR EMAIL'
 before_script:
@@ -38,14 +38,16 @@ before_script:
 
 # Maybe add minification scripts here
 script:
-- hexo generate
+  - hexo generate
 
 deploy:
   provider: s3
   bucket: www.juanmanuelruizfernandez.com
+  skip_cleanup: true
   local_dir: public
   on:
     branch: develop
+  acl: public_read
 # after_success:
 # - aws s3 rm --recursive s3://www.juanmanuelruizfernandez.com
 # - aws s3 cp public/* s3://www.juanmanuelruizfernandez.com/
