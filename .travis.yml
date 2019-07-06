@@ -18,12 +18,13 @@ script:
 
 before_deploy:
   - pip install awscli --upgrade --user
+  - aws s3 rm s3://www.juanmanuelruizfernandez.com --recursive
 
 deploy:
   provider: s3
   region: eu-west-1
   bucket: www.juanmanuelruizfernandez.com
-  skip_cleanup: false
+  skip_cleanup: true
   local_dir: public
   on:
     branch: develop
