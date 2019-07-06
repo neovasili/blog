@@ -9,21 +9,23 @@
             </div>
             
     <% site.categories.sort('name').map(function(category){  %>
-        <% const posts_filtered_list = post_filter_by_lang( category.posts, page_language() ) %>
-        <div class="archives-wrap">
-            <div class="archive-year-wrap" id="<%= category.name %>">
-                <h1 class="archive-category"><%= category.name %></h1>
+        <% if( category.length ){ %>
+            <% const posts_filtered_list = post_filter_by_lang( category.posts, page_language() ) %>
+            <div class="archives-wrap">
+                <div class="archive-year-wrap" id="<%= category.name %>">
+                    <h1 class="archive-category"><%= category.name %></h1>
+                </div>
+                <div class="archives">
+                    <% posts_filtered_list.sort('-date').map(function(post, i){  %>
+                        <%- partial('_partial/archive-post', {post: post, index: true}) %>
+                        <% if (post.subtitle && post.subtitle.length) { %>
+                            <h3 class="post-subtitle">
+                                <%- post.subtitle %>
+                            </h3>
+                        <% } %>
+                    <% } ) %>
+                </div>
             </div>
-            <div class="archives">
-                <% posts_filtered_list.sort('-date').map(function(post, i){  %>
-                    <%- partial('_partial/archive-post', {post: post, index: true}) %>
-                    <% if (post.subtitle && post.subtitle.length) { %>
-                        <h3 class="post-subtitle">
-                            <%- post.subtitle %>
-                        </h3>
-                    <% } %>
-                <% }) %>
-            </div>
-        </div>
-    <% }) %>
+        <% } %>
+    <% } ) %>
 </div>

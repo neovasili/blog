@@ -1,5 +1,5 @@
 ---
-title: Press start button
+title: Open the door
 date: 2019-06-23 21:04:10
 lang: en
 label: under-construction

@@ -8,12 +8,12 @@ subtitle: welcome to hell, rookie!  # The subtitle of your website
 description:  # The description of your website
 keywords:  # Keywords of the website
 author: Juan Manuel Ruiz Fernández  # Author name
-language: [ 'es', 'en' ]  # default language
+language: [ 'es' ]  # default language
 timezone: Europe/Madrid  # Default timezone
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://blog.juanmanuelruizfernandez.com
+url: http://thebrickcode.com
 root: /
 permalink: :lang/:year/:month/:day/:title/
 permalink_defaults:

@@ -2,7 +2,7 @@
 title: Cookies
 date: 2019-07-06 12:37:43
 ---
-Este blog es personal, lo utilizo con fines divulgativos de mis experiencias y aprendizajes en el mundo del desarrollo web y la tecnología en general así que no necesito tus datos para nada, puedes estar tranquilo/a ;)
+Este blog es personal, escribo en él con fines divulgativos de mis experiencias y aprendizajes en el mundo del desarrollo web y la tecnología en general así que no necesito tus datos para nada, puedes estar tranquilo/a ;)
 
 No obstante, me obligan a informarte de la obviedad de que este blog utiliza cookies y cuáles son. Esto resulta bastante absurdo porque salvo que haya implementado yo manualmente (cosa que no he hecho) alguna cookie personalizada, es fácil descubrir qué cookies se te están instalando y buscar información sobre ellas. Cualquier navegador de hoy en día tiene algún mecanismo para ver qué cookies se almacenan cuando estás en una página determinada. Por ejemplo:
 *  [Google chrome](https://developers.google.com/web/tools/chrome-devtools/storage/cookies)
@@ -11,11 +11,11 @@ No obstante, me obligan a informarte de la obviedad de que este blog utiliza coo
 
 Básicamente lo que podrás encontrar son las cookies de google analytics y del componente que uso para los comentarios.
 
-Como se tratan de cookies de terceros y estas pueden cambiar con el tiempo, no quisiera perder el tiempo tratando de explicar todas y cada una de las cookies que hay y estar pendiente de modificarlas cuando cambien, así que realizaré una explicación breve de ambos bloques:
+Como se tratan de cookies de terceros y estas pueden cambiar con el tiempo, no quisiera perder el tiempo tratando de explicar todas y cada una de las cookies que hay y estar pendiente de modificarlas cuando cambien, así que realizaré una explicación breve de ambos bloques y te indicaré dónde puedes profundizar más sobre el tema.
 
 ## Google analytics
 
-Como seguramente sabrás, google analytics se utiliza principalmente para hacer seguimiento de los usuarios que llegan a una página web contando cuántas veces y cuándo la visitan. Así, yo puedo obtener estadísticas de la gente que llega a mi blog y desde dónde llegan.
+Como seguramente sabrás, google analytics se utiliza principalmente para hacer seguimiento de los usuarios que llegan a una página web contando cuántas veces y cuándo la visitan. Así, yo puedo obtener estadísticas de la gente que llega a mi blog y desde dónde llegan. Cuáles son los posts más visitados, o si lo que escribo llega a más o menos gente, algo de **analítica web**, vaya. En definitiva, si tiene sentido lo que estoy haciendo y el cómo lo hago.
 
 Puedes tener más detalles de las cookies concretas que se crean y su utilidad en la página oficial de google para ello: [Cookies google analytics](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage?hl=es-419).
 
