@@ -78,7 +78,13 @@ li.language {
 .widget ul.tag-list,
 .widget ul.category-list {
     display: inline-block;
-} 
+}
+
+.site-cookies {
+    float: left;
+    width: 50%;
+    text-align: center;
+}
 
 @media only screen and ( max-width: 60em ) {
     #container #main-nav-mobile {
