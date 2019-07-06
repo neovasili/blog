@@ -40,9 +40,13 @@ before_script:
 script:
 - hexo generate
 
-after_success:
-- aws s3 rm --recursive s3://www.juanmanuelruizfernandez.com
-- aws s3 cp public/* s3://www.juanmanuelruizfernandez.com/
+deploy:
+  provider: s3
+  bucket: www.juanmanuelruizfernandez.com
+  local_dir: public
+# after_success:
+# - aws s3 rm --recursive s3://www.juanmanuelruizfernandez.com
+# - aws s3 cp public/* s3://www.juanmanuelruizfernandez.com/
 # - mkdir .deploy                   # Create a folder to use for teh pages branch
 # - cd .deploy
 # - git clone --depth 1 --branch gh-pages --single-branch $DEPLOY_REPO . || (git init && git remote add -t gh-pages origin $DEPLOY_REPO)
