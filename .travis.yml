@@ -3,10 +3,6 @@ language: node_js
 node_js:
   - node
 
-branches:
-  # only:
-  # - master
-
 before_install:
   - npm install -g hexo
 
@@ -19,20 +15,28 @@ script:
 
 before_deploy:
   - pip install awscli --upgrade --user
-  - aws s3 rm s3://www.juanmanuelruizfernandez.com --recursive
+  - if [ "$TRAVIS_BRANCH" = "develop" ]; then aws s3 rm s3://staging.juanmanuelruizfernandez.com --recursive
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then aws s3 rm s3://www.juanmanuelruizfernandez.com --recursive
 
 deploy:
-  provider: s3
-  region: eu-west-1
-  bucket: www.juanmanuelruizfernandez.com
-  skip_cleanup: true
-  local_dir: public
-  on:
-    branch: develop
-  acl: public_read
+  - provider: s3
+    region: eu-west-1
+    bucket: staging.juanmanuelruizfernandez.com
+    skip_cleanup: true
+    local_dir: public
+    on:
+      branch: develop
+    acl: public_read
+  - provider: s3
+    region: eu-west-1
+    bucket: www.juanmanuelruizfernandez.com
+    skip_cleanup: true
+    local_dir: public
+    on:
+      branch: master
+    acl: public_read
 
 after_deploy:
   - | 
     travis-ci-cloudfront-invalidation -a $AWS_ACCESS_KEY -s $AWS_SECRET_KEY \
-    -c $AWS_CLOUDFRONT_DIST_ID -i '/*' -b $TRAVIS_BRANCH -p $TRAVIS_PULL_REQUEST \
-    -o develop
+    -c $AWS_CLOUDFRONT_DIST_ID -i '/*' -b $TRAVIS_BRANCH -p $TRAVIS_PULL_REQUEST
