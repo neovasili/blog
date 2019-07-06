@@ -40,8 +40,12 @@ before_script:
 script:
   - hexo generate
 
+before_deploy:
+  - pip install awscli --upgrade --user
+
 deploy:
   provider: s3
+  region: eu-west-1
   bucket: www.juanmanuelruizfernandez.com
   skip_cleanup: true
   local_dir: public
