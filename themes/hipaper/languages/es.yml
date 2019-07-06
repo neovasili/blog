@@ -16,7 +16,7 @@ recent_posts: Recientes
 newer: Nuevo
 older: Anterior
 share: Compartir
-theme_by: Theme by
+theme_by: Theme based on
 rss_feed: RSS
 category: Categoría
 tag: Tag
@@ -32,4 +32,10 @@ insight:
     categories: 'Categorías'
     tags: 'Tags'
     untitled: '(sin título)'
+es: español
+en: inglés
 powered_by: Construido por
+article:
+  read: 'de lectura'
+  about: 'Alrededor de'
+  words: 'palabras'

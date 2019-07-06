@@ -3,19 +3,19 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: mi blog  # The title of your website
-subtitle: de los infiernos  # The subtitle of your website
+title: the brick code  # The title of your website
+subtitle: welcome to hell, rookie!  # The subtitle of your website
 description:  # The description of your website
 keywords:  # Keywords of the website
 author: Juan Manuel Ruiz Fernández  # Author name
-language: es  # default language
+language: [ 'es' ]  # default language
 timezone: Europe/Madrid  # Default timezone
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://blog.juanmanuelruizfernandez.com
+url: http://thebrickcode.com
 root: /
-permalink: :year/:month/:day/:title/
+permalink: :lang/:year/:month/:day/:title/
 permalink_defaults:
 
 # Directory
@@ -25,7 +25,7 @@ tag_dir: tags
 archive_dir: archives
 category_dir: categories
 code_dir: downloads/code
-i18n_dir: :languages
+i18n_dir: :lang
 skip_render:
 
 # Writing
@@ -35,13 +35,13 @@ titlecase: false # Transform title into titlecase
 external_link: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
-post_asset_folder: true
+post_asset_folder: false
 relative_link: false
 future: true
 highlight:
   enable: true
   line_number: true
-  auto_detect: false
+  auto_detect: true
   tab_replace:
   
 # Home page setting

@@ -18,10 +18,14 @@
         <% } else {%>
           <section id="main" style="float:none;"><%- body %></section>
         <% } %>
+        <ul id="main-nav-mobile">
+          <li class="language">
+            <%- partial('common/languages') %>
+          </li>
+        </ul>
       </div>
 
     </div>
-    <!-- <%- partial('_partial/mobile-nav', null, {cache: !config.relative_link}) %> -->
     <%- partial('_partial/footer', null, {cache: !config.relative_link}) %>
     <%- partial('_partial/after-footer') %>
   </div>

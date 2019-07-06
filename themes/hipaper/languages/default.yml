@@ -16,13 +16,13 @@ recent_posts: Recent Posts
 newer: Newer
 older: Older
 share: Share
-theme_by: Theme by
+theme_by: Theme based on
 rss_feed: RSS Feed
 category: Category
 tag: Tag
-connect: 'Connect With Us'
+connect: 'Connect With Me'
 post_total_count: There are %d posts in total till now.
-read_more: Continue Reading →
+read_more: more →
 contents: Contents
 none: None
 insight:
@@ -32,3 +32,10 @@ insight:
     categories: 'Categories'
     tags: 'Tags'
     untitled: '(Untitled)'
+es: spanish
+en: english
+powered_by: Build by
+article:
+  read: 'of reading'
+  about: 'About'
+  words: 'words'

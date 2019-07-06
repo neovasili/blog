@@ -16,25 +16,26 @@
         </div> 
         -->
 
-
         <% site.tags.sort('name').map(function(tag){  %>
-        <div class="archives-wrap">
-            <div class="archive-year-wrap" id="<%= tag.name %>">
-                <h1 class="archive-tag"><%= tag.name %></h1>
-            </div>
-            <div class="archives">
-                <% tag.posts.sort('-date').map(function(post, i){  %>
-                    <%- partial('_partial/archive-post', {post: post, index: true}) %>
-                    <% if (post.subtitle && post.subtitle.length) { %>
-                        <h3 class="post-subtitle">
-                            <%- post.subtitle %>
-                        </h3>
-                    <% } %>
-                <% }) %>
-            </div>
-        </div>
-        <% }) %>
-
-
+            <% if( tag.length ){ %>
+                <div class="archives-wrap">
+                    <div class="archive-year-wrap" id="<%= tag.name %>">
+                        <h1 class="archive-tag"><%= tag.name %></h1>
+                    </div>
+                    <div class="archives">
+                        <% tag.posts.sort('-date').map(function(post, i){  %>
+                            <% if( post.lang == page_language() ) { %>
+                                <%- partial('_partial/archive-post', {post: post, index: true}) %>
+                                <% if (post.subtitle && post.subtitle.length) { %>
+                                    <h3 class="post-subtitle">
+                                        <%- post.subtitle %>
+                                    </h3>
+                                <% } %>
+                            <% } %>
+                        <% } ) %>
+                    </div>
+                </div>
+            <% } %>
+        <% } ) %>
     </div>
 </div>

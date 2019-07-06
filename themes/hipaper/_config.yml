@@ -30,7 +30,7 @@ avatar:
 
 
 # AboutPage background, support multiple images.
-about_big_image: [css/images/pose01.jpg, https://source.unsplash.com/collection/954550/1920x1080, https://source.unsplash.com/collection/954550/1920x1081]
+# about_big_image: [css/images/pose01.jpg, https://source.unsplash.com/collection/954550/1920x1080, https://source.unsplash.com/collection/954550/1920x1081]
 
 
 # Homepage thumbnail
@@ -45,23 +45,22 @@ fancybox: true
 sidebar: right
 widgets:
 - search
-- social
 - recent_posts
+- archive
 - category
 - tag
-- tagcloud
-- archive
+# - social
+# - tagcloud
 
 # Social Links
 # Key is the name of FontAwsome icon.
 # Value is the target link (E.g. GitHub: https://github.com/iTimeTraveler)
 social:
-  Github: https://github.com/iTimeTraveler
-  Weibo: 
-  Twitter: 
-  Facebook: 
-  Google-plus: 
-  Instagram: 
+  Github: https://github.com/neovasili
+  Twitter: https://twitter.com/NeoVasili
+  Facebook: https://www.facebook.com/juanmanuelruizfernandez
+  Instagram: https://www.instagram.com/neovasili/
+  LinkedIn: https://www.linkedin.com/in/juanmanuelruizfernandez/
 
 
 # Search
@@ -72,9 +71,9 @@ search:
 
 
 # comment ShortName, you can choose only ONE to display.
+disqus_shortname: juanmanuelruiz-com
 duoshuo_shortname: 
-disqus_shortname: 
-livere_shortname: MTAyMC8yOTQ4MS82MDQ5
+livere_shortname: 
 uyan_uid: 
 wumii: 
 
@@ -97,7 +96,7 @@ baidu_site_verification:
 qihu_site_verification:
 
 # Miscellaneous
-google_analytics:
+google_analytics: UA-142480882-1
 gauges_analytics:
 baidu_analytics: false
 tencent_analytics:
@@ -117,4 +116,4 @@ facebook_sdk:
   webmaster:    #true
 
 # CNZZ count
-cnzz_siteid: 1260716016
+cnzz_siteid: 
