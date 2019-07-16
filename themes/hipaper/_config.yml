@@ -11,13 +11,8 @@ menu:
   About: about
 rss: /atom.xml
 
-
-# Set default keywords (Use a comma to separate)
-keywords: ""
-
 # Put your favicon.ico into `hexo-site/themes/hipaper/source/` directory.
 favicon: css/images/favicon.ico
-
 
 # Put your avatar.jpg into `hexo-site/themes/hipaper/source/` directory.
 # url is target link (E.g. `url: https://hexo.io/logo.svg` or `url: css/images/mylogo.jpg`)
@@ -28,23 +23,19 @@ avatar:
   bottom: 10
   url: https://hexo.io/logo.svg
 
-
 # AboutPage background, support multiple images.
 # about_big_image: [css/images/pose01.jpg, https://source.unsplash.com/collection/954550/1920x1080, https://source.unsplash.com/collection/954550/1920x1081]
-
 
 # Homepage thumbnail
 random_thumb: false
 
-
 # Content
 fancybox: true
-
 
 # Sidebar
 sidebar: right
 widgets:
-- search
+# - search
 - recent_posts
 - archive
 - category
@@ -62,13 +53,11 @@ social:
   Instagram: https://www.instagram.com/neovasili/
   LinkedIn: https://www.linkedin.com/in/juanmanuelruizfernandez/
 
-
 # Search
 search:
     insight: true # you need to install `hexo-generator-json-content` before using Insight Search
     swiftype: # enter swiftype install key here
     baidu: false # you need to disable other search engines to use Baidu search, options: true, false
-
 
 # comment ShortName, you can choose only ONE to display.
 disqus_shortname: juanmanuelruiz-com
@@ -82,7 +71,7 @@ wumii:
 # Available value:
 #    default | normal | night | night eighties | night blue | night bright
 # https://github.com/chriskempson/tomorrow-theme
-highlight_theme: default
+highlight_theme: night
 
 
 # widget behavior
