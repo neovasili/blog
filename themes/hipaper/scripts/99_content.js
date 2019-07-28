@@ -174,6 +174,15 @@ function patchCodeHighlight(content) {
         const classes = $(this).attr('class').split(' ');
         if (classes.length === 1) {
             $(this).addClass('hljs-' + classes[0]);
+            if( classes[0] == "attr" ) {
+              $(this).addClass('attribute');
+            }
+            if( classes[0] == "string" ) {
+              $(this).addClass('literal');
+            }
+            if( classes[0] == "number" ) {
+              $(this).addClass('number');
+            }
             $(this).removeClass(classes[0]);
         }
     });
