@@ -45,8 +45,8 @@ highlight:
   tab_replace: 
 
 github_code:
-  cap: false
-  re: true
+  cap: true
+  re: false
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')

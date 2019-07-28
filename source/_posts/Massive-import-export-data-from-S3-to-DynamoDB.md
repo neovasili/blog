@@ -67,34 +67,7 @@ Para configurar s3 como endpoint fuente, necesitas lo siguiente:
 *  Nombre del **bucket** de S3 donde estarán los ficheros csv, puede haber N ficheros.
 *  **Estructura** de tabla. Fichero json que define la estructura de datos del csv. Por ejemplo:
 
-```json
-{
-  "TableCount": "1",
-  "Tables": [
-    {
-      "TableName": "test",
-      "TablePath": "import/test/",
-      "TableOwner": "import",
-      "TableColumns": [
-        {
-          "ColumnName": "id",
-          "ColumnType": "STRING",
-          "ColumnNullable": "false",
-          "ColumnIsPk": "true",
-          "ColumnLength": "25"
-        },
-        {
-          "ColumnName": "name_value",
-          "ColumnType": "STRING",
-          "ColumnNullable": "false",
-          "ColumnLength": "20"
-        }
-      ],
-      "TableColumnsTotal": "2"
-    }
-  ]
-}
-```
+{% ghcode https://github.com/neovasili/dms-s3-import-to-dynamodb/blob/master/files/extra_connection_attributes.json %}
 
 En esta estructura caben destacar los atributos:
 *  **TableName**. Como su nombre indica es el nonbre de la tabla origen.
@@ -136,50 +109,7 @@ Aquí, a parte de conectar los elementos antes descritos, tienes que considerar 
 *  **Ajustes** de la tarea de replicación. Fichero json con múltiples ajustes avanzados de la tarea. Aquí lo que te puede interesar es la definición del loggroup y logstream de cloudwatch -inicialmente tienen que estar vacíos, así que para setearlos debes hacerlo una vez creada la tarea - para que puedas llevar trazabilidad de lo que sucede en tus tareas de replicación.
 *  **Mappings** de las tablas. Es decir, qué columnas corresponden desde el origen, con qué columnas en el destino. Por ejemplo:
 
-```json
-{
-  "rules": [
-    {
-      "rule-type": "selection",
-      "rule-id": "1",
-      "rule-name": "1",
-      "object-locator": {
-        "schema-name": "import",
-        "table-name": "test"
-      },
-      "rule-action": "include"
-    },
-    {
-      "rule-type": "object-mapping",
-      "rule-id": "2",
-      "rule-name": "2",
-      "rule-action": "map-record-to-record",
-      "object-locator": {
-        "schema-name": "import",
-        "table-name": "test"
-      },
-      "target-table-name": "test",
-      "mapping-parameters": {
-        "partition-key-name": "id",
-        "attribute-mappings": [
-          {
-            "target-attribute-name": "id",
-            "attribute-type": "scalar",
-            "attribute-sub-type": "string",
-            "value": "$${id}"
-          },
-          {
-            "target-attribute-name": "name_value",
-            "attribute-type": "scalar",
-            "attribute-sub-type": "string",
-            "value": "$${name_value}"
-          }
-        ]
-      }
-    }
-  ]
-}
-```
+{% ghcode https://github.com/neovasili/dms-s3-import-to-dynamodb/blob/master/files/table_mappings.json %}
 
 Existe en DMS una versión GUI de este mapping, pero sinceramente a mi me parece más liosa que con el json, aunque también es cierto que existe poca documentación sobre la estructura de este json, así que _have it your way_ ;)
 
@@ -195,25 +125,15 @@ La primera vez, en realidad, lo hice porque para poder probar que todo funcionab
 
 Tienes en mi repo de github todo el código terraform de ejemplo utilizado en este artículo para que lo descargues y lo apliques sobre la marcha: https://github.com/neovasili/dms-s3-import-to-dynamodb.
 
-No obstante, te pongo aquí la parte de DMS, que es la más divertida. Voy a ir describiendo del mismo modo que en el resto del artículo.
+No obstante, has de tener en cuenta una cosa respecto de la parte de DMS:
 
-### Source endpoint
+{% gist 063a7e59e3d49c5a3e68965f21319a21 %}
 
-```hcl
-resource "aws_dms_endpoint" "origin" {
-  endpoint_id   = var.source_endpoint_id
-  endpoint_type = "source"
-  engine_name   = "s3"
+Ese _depends on_ del rol, a día de hoy, no funciona como se espera. Cuando empecé con esto, me di cuenta del problema que había y lo reporté, pero no parece que esté resuelto tal como puedes comprobar en el [hilo de la issue](https://github.com/hashicorp/terraform/issues/20346) y en [el que se generó](https://github.com/terraform-providers/terraform-provider-aws/issues/7748) a partir de éste.
 
-  s3_settings {
-    bucket_folder             = ""
-    bucket_name               = aws_s3_bucket.dynamodb_import_bucket.bucket
-    compression_type          = "NONE"
-    csv_delimiter             = var.csv_delimiter
-    csv_row_delimiter         = var.csv_row_delimiter
-    external_table_definition = data.template_file.extra_connection_attributes.rendered
+El _workaround_ en este caso es tan sencillo como hacer `terraform apply` una vez - te dará error al crear la instancia de replicación - y volver a ejecutar `terraform apply` para que se creen todos los elementos que no se crearon en el primer paso.
 
-    service_access_role_arn = aws_iam_role.dms_vpc_role.arn
-  }
-}
-```
+Una vez que ya tengas toda la infraestructura en marcha, sólo tienes que arrancar la tarea de replicación bien desde la consola web de AWS o bien vía aws cli.
+
+## Conclusions
+
