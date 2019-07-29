@@ -15,7 +15,7 @@ categories: data-migration
 ---
 ![](/images/s3-to-dynamodb.jpg)
 
-Para empezar quería escribir al menos un post explicando cómo había sido esto de crear un blog serverless, pero lo cierto es que me apetecía escribir primero este post. Hace algún tiempo que lo tengo en mente.
+Para empezar, quería escribir al menos un post explicando cómo había sido esto de crear un blog serverless, pero lo cierto es que me apetecía escribir primero este post. Hace algún tiempo que lo tengo en mente.
 
 Esta es una de esas historias que se escriben solas.
 
@@ -46,7 +46,7 @@ De las primeras cosas que me empezaron a chirriar fue que **datapipeline**, aunq
 
 Aunque los había estudiado, era la primera vez que usaba ambos servicios, así que al principio no entendía muy bien cómo funcionaban. Leí algo de documentación y encontré algún esquema que me aclaró un poco más el tema. Acto seguido, me puse a "catarlo".
 
-Segunda cosa que me chirriaba. El invento, tardaba casi 30 minutos sólo en levantarse y otros 15 en morir algo que, por otra parte, era lógico teniendo en cuenta que el cluster tenía tres nodos bastante tochos con mucha fontanería que no me apetecía entender demasiado. Esto iba a suponer un coste importante si se tenía que mantener levantado mucho rato, pero se suponía que iba a ser una sola carga (iluso de mí) y que con toda esa potencia no iba a llevar mucho tiempo.
+Segunda cosa que me chirriaba. El invento, tardaba más de 30 minutos sólo en levantarse y otros 15 en morir algo que, por otra parte, era lógico teniendo en cuenta que el cluster tenía tres nodos bastante tochos con mucha fontanería que no me apetecía entender demasiado. Esto iba a suponer un coste importante si se tenía que mantener levantado mucho rato, pero se suponía que iba a ser una sola carga (iluso de mí) y que con toda esa potencia no iba a llevar mucho tiempo.
 
 Y tanto. El proceso de importación con un fichero de pruebas de 120 mil tuplas, a penas llevaba 15 o 20 segundos, pero petaba como una palomita. Lo peor, es que no veía de forma clara dónde estaba el pete y al tercer intento, se me empezaron a hinchar las venas del cráneo y pensé que tenía que haber algo más simple que pudiera servir también.
 
@@ -54,7 +54,7 @@ Y tanto. El proceso de importación con un fichero de pruebas de 120 mil tuplas,
 
 Rebuscando en los avernos encontré [un post del blog oficial de AWS](https://aws.amazon.com/es/blogs/database/migrate-delimited-files-from-amazon-s3-to-an-amazon-dynamodb-nosql-table-using-aws-database-migration-service-and-aws-cloudformation/) que decía que se podía usar **AWS Database Migration Service** (DMS) para utilizar como fuente s3 y destino dynamodb. Así que parecía que había otra alternativa con buena pinta.
 
-Me puse manos a la obra y ví que efectivamente en la documentación oficial DMS permitía configurar s3 como [_source endpoint_](https://docs.aws.amazon.com/es_es/dms/latest/userguide/CHAP_Source.S3.html) además de las configuraciones necesarias y como [_target endpoint_](https://docs.aws.amazon.com/es_es/dms/latest/userguide/CHAP_Target.DynamoDB.html) dynamodb.
+Me puse manos a la obra y ví que efectivamente en la documentación oficial DMS permitía configurar s3 como [_source endpoint_](https://docs.aws.amazon.com/es_es/dms/latest/userguide/CHAP_Source.S3.html) y como [_target endpoint_](https://docs.aws.amazon.com/es_es/dms/latest/userguide/CHAP_Target.DynamoDB.html) dynamodb.
 
 Ni que decir tiene, que este mismo proceso puede realizarse a la inversa y elegir dynamodb como fuente y s3 como destino, de ahí que en el título haya puesto _import/export_, pero me centraré en el _import_, ya que fue el origen de esta historia.
 
@@ -64,13 +64,13 @@ Para configurar s3 como endpoint fuente, necesitas lo siguiente:
 *  **Identificador** del punto de enlace, un nombre, vaya.
 *  **Motor** de origen: S3.
 *  ARN de **rol de acceso al servicio**. Hay que crear un rol específico con los permisos necesarios para que DMS pueda operar con S3 o usar uno de los gestionados por AWS.
-*  Nombre del **bucket** de S3 donde estarán los ficheros csv, puede haber N ficheros.
+*  Nombre del **bucket** de S3 donde estarán los ficheros csv; puede haber N ficheros.
 *  **Estructura** de tabla. Fichero json que define la estructura de datos del csv. Por ejemplo:
 
 {% ghcode https://github.com/neovasili/dms-s3-import-to-dynamodb/blob/master/files/extra_connection_attributes.json %}
 
 En esta estructura caben destacar los atributos:
-*  **TableName**. Como su nombre indica es el nonbre de la tabla origen.
+*  **TableName**. Como su nombre indica es el nombre de la tabla origen.
 *  **TablePath**. DMS para funcionar con S3 requiere que los ficheros tengan un path mínimo específico, donde éste será: `schema_name/table_name` y de ahí el atributo anterior. Así, la estructura mínima que necesitas en tu bucket de S3 para que funcione con DMS es: `bucket_name/schema_name/table_name/*.csv`.
 
 Además de estos atributos básicos, es posible definir otros atributos adicionales de conexión bastante interesantes:
@@ -89,9 +89,9 @@ Aunque he dicho que es más simple, aquí empieza la diversión. Éste útlimo r
 
 ### Replication instance
 
-Es la parte más sencilla de configurar. Basta con crear un elemento de la misma. El único campo a rellenar es el nombre, el resto se pueden dejar por defecto, aunque se pueden configurar cosas como la VPC en la que estará - sino se especifica se crea en la que te da AWS por defecto - el tamaño de disco, la versión del motor DMS de la instancia - yo usaría la última siempre que sea posible- si estará en multi-az o si estará accesible públicamente, entre otras cosas.
+Basta con crear un elemento de la misma. El único campo a rellenar es el nombre, el resto se pueden dejar por defecto, aunque se pueden configurar cosas como la VPC en la que estará - sino se especifica se crea en la que te da AWS por defecto - el tamaño de disco, la versión del motor DMS de la instancia - yo usaría la última siempre que sea posible- si estará en multi-az o si estará accesible públicamente, entre otras cosas.
 
-En este punto podemos elegir también el **tamaño de la instancia** de replicación. Por defecto aparece seleccionada una dms.t2.medium, pero podemos modificarla según necesitemos. Hay que tener en cuenta también la [capa gratuita](https://aws.amazon.com/es/dms/free-dms/), sino los precios están disponibles aquí: https://aws.amazon.com/es/dms/pricing/.
+En este punto podemos elegir también el **tamaño de la instancia** de replicación. Por defecto aparece seleccionada una dms.t2.medium, pero podemos modificarla según necesitemos. Hay que tener en cuenta también la [capa gratuita](https://aws.amazon.com/es/dms/free-dms/), sino, los precios están disponibles aquí: https://aws.amazon.com/es/dms/pricing/.
 
 También es importante que consideres que cuanto mayor sea la instancia de replicación, mayor _throughput_ de red tendrás y por tanto más rápido podrás enviar datos a DynamoDB. Esto también está condicionado, obviamente, por la capacidad de escritura y lectura que le des a la tabla destino.
 
@@ -113,7 +113,7 @@ Aquí, a parte de conectar los elementos antes descritos, tienes que considerar 
 
 Existe en DMS una versión GUI de este mapping, pero sinceramente a mi me parece más liosa que con el json, aunque también es cierto que existe poca documentación sobre la estructura de este json, así que _have it your way_ ;)
 
-Lo que tenéis que saber de este json es que en los dos primeros bloques se referencia a la "tabla" origen - recordad que teníamos _schema_name_ y _table_name_ - y en el tercer bloque referenciamos al destino.
+Lo que tienes que saber de este json es que en los dos primeros bloques se referencia a la "tabla" origen - recuerda que teníamos _schema_name_ y _table_name_ - y en el tercer bloque referenciamos al destino.
 
 En este último bloque, además, es donde decimos qué atributos del origen - los que están referenciados con el doble dolar - corresponden con los del destino.
 
@@ -135,5 +135,26 @@ El _workaround_ en este caso es tan sencillo como hacer `terraform apply` una ve
 
 Una vez que ya tengas toda la infraestructura en marcha, sólo tienes que arrancar la tarea de replicación bien desde la consola web de AWS o bien vía aws cli.
 
+Cuando acabes tus tareas de replicación/importación/exportación, puedes prenderle fuego a todo con `terraform destroy`, pero has de tener en cuenta que **habrá un par de cosas que no se te van a eliminar**: los logs de cloudwatch y la tabla en DynamoDB de exclusiones.
+
+Este último elemento lo crea DMS cuando se activa una tarea de replicación por primera vez. Se supone que DMS enviará ahí todo aquello que por el motivo que sea, no haya podido replicar del origen al destino.
+
+Tras haber usado varias veces este procedimiento nunca se me ha enviado nada a esa tabla, pero entiendo que puede llegar a suceder. Tenlo en cuenta.
+
 ## Conclusions
 
+Vale, ya sé que es un post largo y que parece bastante complejo, pero con estas indicaciones, en nada que lo uses una vez, verás que DMS es una herramienta muy potente, que soluciona un problema que puede parecer estúpido a simple vista, pero que sin embargo nos ahorra muchos dolores de cabeza y tiempo.
+
+No recuerdo exactamente el tiempo que duró el proceso completo de importación con los datos reales, fueron unas pocas horas, pero sí recuerdo que la estimación que hicimos con el "proceso manual" se iba a más de una semana importando datos.
+
+Para nuestro caso de uso usamos una instancia tipo dms.t2.large y subimos el aprovisionamiento de DynamoDB a 300 unidades de escritura y 1000 de lectura. Me gustaría en algún momento hacer más pruebas jugando con estos valores para comparar resultados.
+
+DMS, a parte de los logs, también tiene un pequeño _dashboard_ que te permite monitorizar el proceso.
+
+No pongo en duda la utilidad de la solución EMR + datapipeline, pero tengo claro que en este caso, esta solución es mucho más optima en cuanto a tiempos y a costes. Con DMS el único coste que se asumió fue el aprovisionamiento temporal de unidades de escritura y lectura de DynamoDB, que con datapipeline también hubiese sido necesario.
+
+Infraestructura como código al poder. Al final, tuvimos que hacer algunos ajustes y realizar la importación completa de los datos un par de veces más. Fue increíblemente útil tenerlo todo preparado para con sólo tirar un par de comandos, dejarlo todo listo.
+
+Tenía ganas de escribir este artículo y compartir contigo mi experiencia en este asunto. Por norma general, me gusta tocar los entresijos y conocer las tripas de los sistemas, soy bastante partidario del _do it yourself_, pero también de utilizar sistemas ya construídos si la solución es rentable. No podemos pretender saber de todo.
+
+Gracias por llegar al final. Espero que te sea útil en algún momento ;)
