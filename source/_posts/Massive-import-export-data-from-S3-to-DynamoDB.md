@@ -33,10 +33,9 @@ Prácticamente el primer día en la ofi. Me siento, y a los pocos minutos cuando
 
 Efectivamente, con una simple búsqueda, localicé algunos enlaces entre los que estaba uno de la propia documentación oficial de AWS que se hacía usando datapipeline. Se lo comenté a mi compi, y me dijo que no era necesario todavía, así que el tema se quedó ahí y lo retomamos más adelante.
 
-**TL;DR** Clonar repositorio y leer el readme ;)
-```bash
-git clone https://github.com/neovasili/dms-s3-import-to-dynamodb.git
-```
+___
+**TL;DR** Clonar [mi repositorio de github](https://github.com/neovasili/dms-s3-import-to-dynamodb.git) y seguir los pasos del readme ;)
+___
 
 ## Discovery phase
 
@@ -58,14 +57,20 @@ Me puse manos a la obra y ví que efectivamente en la documentación oficial DMS
 
 Ni que decir tiene, que este mismo proceso puede realizarse a la inversa y elegir dynamodb como fuente y s3 como destino, de ahí que en el título haya puesto _import/export_, pero me centraré en el _import_, ya que fue el origen de esta historia.
 
+## Terraform
+
+En aras de que todo este invento sea reutilizable y también que puedas eliminar todos los recursos que vas a crear una vez que ya no los necesites de forma sencilla, utilicé la conocida herramienta de infrastructura como código [terraform](https://www.terraform.io).
+
+La primera vez, en realidad, lo hice porque para poder probar que todo funcionaba bien, lo hice en una cuenta de AWS que teníamos para pruebas y quería que fuese fácilmente exportable a la cuenta de producción donde luego lo usaríamos. Un paso inteligente por mi parte.
+
+Tienes en mi repo de github todo el código terraform de ejemplo utilizado en este artículo para que lo descargues y lo apliques sobre la marcha: https://github.com/neovasili/dms-s3-import-to-dynamodb.
+
 ### Source endpoint
 
-Para configurar s3 como endpoint fuente, necesitas lo siguiente:
-*  **Identificador** del punto de enlace, un nombre, vaya.
-*  **Motor** de origen: S3.
-*  ARN de **rol de acceso al servicio**. Hay que crear un rol específico con los permisos necesarios para que DMS pueda operar con S3 o usar uno de los gestionados por AWS.
-*  Nombre del **bucket** de S3 donde estarán los ficheros csv; puede haber N ficheros.
-*  **Estructura** de tabla. Fichero json que define la estructura de datos del csv. Por ejemplo:
+Configurar s3 como endpoint fuente, viene a ser algo como esto:
+{% gist 559695e8e605a9b2ba900b8d917ca866 %}
+
+Lo más destacado es la **estructura de tabla** (_external_table_definition_), que no es ni más ni menos que un fichero json que define la estructura de datos del csv. Por ejemplo:
 
 {% ghcode https://github.com/neovasili/dms-s3-import-to-dynamodb/blob/master/files/extra_connection_attributes.json %}
 
@@ -73,27 +78,27 @@ En esta estructura caben destacar los atributos:
 *  **TableName**. Como su nombre indica es el nombre de la tabla origen.
 *  **TablePath**. DMS para funcionar con S3 requiere que los ficheros tengan un path mínimo específico, donde éste será: `schema_name/table_name` y de ahí el atributo anterior. Así, la estructura mínima que necesitas en tu bucket de S3 para que funcione con DMS es: `bucket_name/schema_name/table_name/*.csv`.
 
-Además de estos atributos básicos, es posible definir otros atributos adicionales de conexión bastante interesantes:
-*  **bucketFolder**. Si los ficheros csv están dentro de una "carpeta" determinada en el bucket, es posible definir la ruta completa. Puede ser útil si ya tienes los ficheros ahí y no quieres moverlos para cumplir con la estructura base que te pide DMS
-*  **csv_delimiter**. Carácter delimitador para las columnas en el csv. Lo típico es que vaya con comas o punto y coma, pero podemos modificarlo por otro. En mi caso utilicé pipes "|" ya que los otros podían encontrarse por ahí y podía provocar que las "columnas" del csv se cortaran por donde no debían.
-*  **csv_row_delimiter**. Carácter delimitador para las filas en el csv. Lo normal será usar "\n", pero podría suceder que por el origen de los datos fuera distinto.
-
 ### Target endpoint
 
 Éste es mucho más simple:
-*  **Identificador** del punto de enlace. Nombre que le pones al endpoint.
-*  **Motor** de origen: dynamodb
-*  ARN de **rol de acceso** al servicio.
 
-Aunque he dicho que es más simple, aquí empieza la diversión. Éste útlimo rol no sólo necesita unos permisos específicos sino que además, aunque AWS te obliga a que lo crees tu, tiene que tener un nombre específico y muy concreto: `dms-vpc-role`. Si por algún motivo, le pones otro nombre, cambias los guiones por guiones bajos o le añades algún tipo de prefijo/sufijo, aquello no funciona, así de simple.
+{% gist e6611f3300b32635600960617c3061fd %}
 
 ### Replication instance
 
-Basta con crear un elemento de la misma. El único campo a rellenar es el nombre, el resto se pueden dejar por defecto, aunque se pueden configurar cosas como la VPC en la que estará - sino se especifica se crea en la que te da AWS por defecto - el tamaño de disco, la versión del motor DMS de la instancia - yo usaría la última siempre que sea posible- si estará en multi-az o si estará accesible públicamente, entre otras cosas.
+A parte del nombre se pueden configurar cosas como la VPC en la que estará - sino se especifica se crea en la que te da AWS por defecto - el tamaño de disco, la versión del motor DMS de la instancia - yo usaría la última siempre que sea posible- si estará en multi-az o si estará accesible públicamente, entre otras cosas.
 
-En este punto podemos elegir también el **tamaño de la instancia** de replicación. Por defecto aparece seleccionada una dms.t2.medium, pero podemos modificarla según necesitemos. Hay que tener en cuenta también la [capa gratuita](https://aws.amazon.com/es/dms/free-dms/), sino, los precios están disponibles aquí: https://aws.amazon.com/es/dms/pricing/.
+En este punto puedes elegir también el **tamaño de la instancia** de replicación. Por defecto aparece seleccionada una dms.t2.medium, pero puedes modificarla según te parezca. Hay que tener en cuenta también la [capa gratuita](https://aws.amazon.com/es/dms/free-dms/), sino, los precios están disponibles aquí: https://aws.amazon.com/es/dms/pricing/.
 
 También es importante que consideres que cuanto mayor sea la instancia de replicación, mayor _throughput_ de red tendrás y por tanto más rápido podrás enviar datos a DynamoDB. Esto también está condicionado, obviamente, por la capacidad de escritura y lectura que le des a la tabla destino.
+
+{% gist e258d7f23e22a69c7c66166ebf6fa0f0 %}
+
+Ese _depends on_ del rol, a día de hoy, no funciona como se espera. Cuando empecé con esto, me di cuenta del problema que había y lo reporté, pero no parece que esté resuelto tal como puedes comprobar en el [hilo de la issue](https://github.com/hashicorp/terraform/issues/20346) y en [el que se generó](https://github.com/terraform-providers/terraform-provider-aws/issues/7748) a partir de éste.
+
+El _workaround_ en este caso es tan sencillo como hacer `terraform apply` una vez - te dará error al crear la instancia de replicación - y volver a ejecutar `terraform apply` para que se creen todos los elementos que no se crearon en el primer paso.
+
+Importante también, que el nombre de rol que va en ese _depends on_ tiene que tener un nombre específico y muy concreto: `dms-vpc-role`. Si por algún motivo, le pones otro nombre, cambias los guiones por guiones bajos o le añades algún tipo de prefijo/sufijo, aquello no funciona, así de simple.
 
 ### Replication task
 
@@ -104,9 +109,10 @@ Básicamente, va a ser lo que conecta todas las piezas y pone tu proceso de impo
 *  **Migrate existing data and replicate ongoing changes**. Realiza una carga masiva inicial desde origen a destino y luego va replicando los cambios que vayan entrando. Acojonantemente útil.
 *  **Replicate data changes only**. No realiza carga inicial, sólo replica entre origen y destino.
 
+{% gist a9b3648dfad923e4a790f6f904ad1357 %}
+
 Aquí, a parte de conectar los elementos antes descritos, tienes que considerar un par cosas:
-*  **ID de la tarea**. Capitán obvio ataca de nuevo.
-*  **Ajustes** de la tarea de replicación. Fichero json con múltiples ajustes avanzados de la tarea. Aquí lo que te puede interesar es la definición del loggroup y logstream de cloudwatch -inicialmente tienen que estar vacíos, así que para setearlos debes hacerlo una vez creada la tarea - para que puedas llevar trazabilidad de lo que sucede en tus tareas de replicación.
+*  **Ajustes** de la tarea de replicación. Fichero json con múltiples ajustes avanzados de la tarea. Lo que te puede interesar de esto es la definición del loggroup y logstream de cloudwatch -inicialmente tienen que estar vacíos, así que para setearlos debes hacerlo una vez creada la tarea - para que puedas llevar trazabilidad de lo que sucede en tus tareas de replicación.
 *  **Mappings** de las tablas. Es decir, qué columnas corresponden desde el origen, con qué columnas en el destino. Por ejemplo:
 
 {% ghcode https://github.com/neovasili/dms-s3-import-to-dynamodb/blob/master/files/table_mappings.json %}
@@ -117,23 +123,9 @@ Lo que tienes que saber de este json es que en los dos primeros bloques se refer
 
 En este último bloque, además, es donde decimos qué atributos del origen - los que están referenciados con el doble dolar - corresponden con los del destino.
 
-## Terraform
+### Run and teardown
 
-En aras de que todo este invento sea reutilizable y también que puedas eliminar todos los recursos que vas a crear una vez que ya no los necesites de forma sencilla, utilicé la conocida herramienta de infrastructura como código [terraform](https://www.terraform.io).
-
-La primera vez, en realidad, lo hice porque para poder probar que todo funcionaba bien, lo hice en una cuenta de AWS que teníamos para pruebas y quería que fuese fácilmente exportable a la cuenta de producción donde luego lo usaríamos. Un paso inteligente por mi parte.
-
-Tienes en mi repo de github todo el código terraform de ejemplo utilizado en este artículo para que lo descargues y lo apliques sobre la marcha: https://github.com/neovasili/dms-s3-import-to-dynamodb.
-
-No obstante, has de tener en cuenta una cosa respecto de la parte de DMS:
-
-{% gist 063a7e59e3d49c5a3e68965f21319a21 %}
-
-Ese _depends on_ del rol, a día de hoy, no funciona como se espera. Cuando empecé con esto, me di cuenta del problema que había y lo reporté, pero no parece que esté resuelto tal como puedes comprobar en el [hilo de la issue](https://github.com/hashicorp/terraform/issues/20346) y en [el que se generó](https://github.com/terraform-providers/terraform-provider-aws/issues/7748) a partir de éste.
-
-El _workaround_ en este caso es tan sencillo como hacer `terraform apply` una vez - te dará error al crear la instancia de replicación - y volver a ejecutar `terraform apply` para que se creen todos los elementos que no se crearon en el primer paso.
-
-Una vez que ya tengas toda la infraestructura en marcha, sólo tienes que arrancar la tarea de replicación bien desde la consola web de AWS o bien vía aws cli.
+Una vez que ya tengas toda la infraestructura en marcha, y los ficheros .csv en su sitio, sólo tienes que arrancar la tarea de replicación bien desde la consola web de AWS o bien vía aws cli.
 
 Cuando acabes tus tareas de replicación/importación/exportación, puedes prenderle fuego a todo con `terraform destroy`, pero has de tener en cuenta que **habrá un par de cosas que no se te van a eliminar**: los logs de cloudwatch y la tabla en DynamoDB de exclusiones.
 
@@ -155,6 +147,6 @@ No pongo en duda la utilidad de la solución EMR + datapipeline, pero tengo clar
 
 Infraestructura como código al poder. Al final, tuvimos que hacer algunos ajustes y realizar la importación completa de los datos un par de veces más. Fue increíblemente útil tenerlo todo preparado para con sólo tirar un par de comandos, dejarlo todo listo.
 
-Tenía ganas de escribir este artículo y compartir contigo mi experiencia en este asunto. Por norma general, me gusta tocar los entresijos y conocer las tripas de los sistemas, soy bastante partidario del _do it yourself_, pero también de utilizar sistemas ya construídos si la solución es rentable. No podemos pretender saber de todo.
+Tenía ganas de escribir este artículo y compartir contigo mi experiencia en este asunto. Por norma general, me gusta tocar los entresijos y conocer las tripas de los sistemas, soy bastante partidario del _do it yourself_ y de la _configuración sobre convención_, pero también de utilizar sistemas ya construídos si la solución es rentable. No podemos pretender saber de todo.
 
 Gracias por llegar al final. Espero que te sea útil en algún momento ;)
