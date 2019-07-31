@@ -68,7 +68,7 @@ Tienes en mi repo de github todo el código terraform de ejemplo utilizado en es
 ### Source endpoint
 
 Configurar s3 como endpoint fuente, viene a ser algo como esto:
-{% gist 559695e8e605a9b2ba900b8d917ca866 %}
+{% gist 10bcee0928a76d53e467ff923ffaa568 %}
 
 Lo más destacado es la **estructura de tabla** (_external_table_definition_), que no es ni más ni menos que un fichero json que define la estructura de datos del csv. Por ejemplo:
 
