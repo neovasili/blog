@@ -53,13 +53,13 @@ Y tanto. El proceso de importación con un fichero de pruebas de 120 mil tuplas,
 
 Rebuscando en los avernos encontré [un post del blog oficial de AWS](https://aws.amazon.com/es/blogs/database/migrate-delimited-files-from-amazon-s3-to-an-amazon-dynamodb-nosql-table-using-aws-database-migration-service-and-aws-cloudformation/) que decía que se podía usar **AWS Database Migration Service** (DMS) para utilizar como fuente s3 y destino dynamodb. Así que parecía que había otra alternativa con buena pinta.
 
-Me puse manos a la obra y ví que efectivamente en la documentación oficial DMS permitía configurar s3 como [_source endpoint_](https://docs.aws.amazon.com/es_es/dms/latest/userguide/CHAP_Source.S3.html) y como [_target endpoint_](https://docs.aws.amazon.com/es_es/dms/latest/userguide/CHAP_Target.DynamoDB.html) dynamodb.
+Me puse manos a la obra y vi que efectivamente en la documentación oficial DMS permitía configurar s3 como [_source endpoint_](https://docs.aws.amazon.com/es_es/dms/latest/userguide/CHAP_Source.S3.html) y como [_target endpoint_](https://docs.aws.amazon.com/es_es/dms/latest/userguide/CHAP_Target.DynamoDB.html) dynamodb.
 
 Ni que decir tiene, que este mismo proceso puede realizarse a la inversa y elegir dynamodb como fuente y s3 como destino, de ahí que en el título haya puesto _import/export_, pero me centraré en el _import_, ya que fue el origen de esta historia.
 
 ## Terraform
 
-En aras de que todo este invento sea reutilizable y también que puedas eliminar todos los recursos que vas a crear una vez que ya no los necesites de forma sencilla, utilicé la conocida herramienta de infrastructura como código [terraform](https://www.terraform.io).
+En aras de que todo este invento sea reutilizable y también que puedas eliminar todos los recursos que vas a crear una vez que ya no los necesites de forma sencilla, utilicé la conocida herramienta de infraestructura como código [terraform](https://www.terraform.io).
 
 La primera vez, en realidad, lo hice porque para poder probar que todo funcionaba bien, lo hice en una cuenta de AWS que teníamos para pruebas y quería que fuese fácilmente exportable a la cuenta de producción donde luego lo usaríamos. Un paso inteligente por mi parte.
 
@@ -86,7 +86,7 @@ En esta estructura caben destacar los atributos:
 
 ### Replication instance
 
-A parte del nombre se pueden configurar cosas como la VPC en la que estará - sino se especifica se crea en la que te da AWS por defecto - el tamaño de disco, la versión del motor DMS de la instancia - yo usaría la última siempre que sea posible- si estará en multi-az o si estará accesible públicamente, entre otras cosas.
+Aparte del nombre se pueden configurar cosas como la VPC en la que estará - sino se especifica se crea en la que te da AWS por defecto - el tamaño de disco, la versión del motor DMS de la instancia - yo usaría la última siempre que sea posible- si estará en multi-az o si estará accesible públicamente, entre otras cosas.
 
 En este punto puedes elegir también el **tamaño de la instancia** de replicación. Por defecto aparece seleccionada una dms.t2.medium, pero puedes modificarla según te parezca. Hay que tener en cuenta también la [capa gratuita](https://aws.amazon.com/es/dms/free-dms/), sino, los precios están disponibles aquí: https://aws.amazon.com/es/dms/pricing/.
 
@@ -111,7 +111,7 @@ Básicamente, va a ser lo que conecta todas las piezas y pone tu proceso de impo
 
 {% gist a9b3648dfad923e4a790f6f904ad1357 %}
 
-Aquí, a parte de conectar los elementos antes descritos, tienes que considerar un par cosas:
+Aquí, además de conectar los elementos antes descritos, tienes que considerar un par cosas:
 *  **Ajustes** de la tarea de replicación. Fichero json con múltiples ajustes avanzados de la tarea. Lo que te puede interesar de esto es la definición del loggroup y logstream de cloudwatch -inicialmente tienen que estar vacíos, así que para setearlos debes hacerlo una vez creada la tarea - para que puedas llevar trazabilidad de lo que sucede en tus tareas de replicación.
 *  **Mappings** de las tablas. Es decir, qué columnas corresponden desde el origen, con qué columnas en el destino. Por ejemplo:
 
@@ -141,12 +141,12 @@ No recuerdo exactamente el tiempo que duró el proceso completo de importación 
 
 Para nuestro caso de uso usamos una instancia tipo dms.t2.large y subimos el aprovisionamiento de DynamoDB a 300 unidades de escritura y 1000 de lectura. Me gustaría en algún momento hacer más pruebas jugando con estos valores para comparar resultados.
 
-DMS, a parte de los logs, también tiene un pequeño _dashboard_ que te permite monitorizar el proceso.
+DMS, aparte de los logs, también tiene un pequeño _dashboard_ que te permite monitorizar el proceso.
 
-No pongo en duda la utilidad de la solución EMR + datapipeline, pero tengo claro que en este caso, esta solución es mucho más optima en cuanto a tiempos y a costes. Con DMS el único coste que se asumió fue el aprovisionamiento temporal de unidades de escritura y lectura de DynamoDB, que con datapipeline también hubiese sido necesario.
+No pongo en duda la utilidad de la solución EMR + datapipeline, pero tengo claro que, en este caso, esta solución es mucho más optima en cuanto a tiempos y a costes. Con DMS el único coste que se asumió fue el aprovisionamiento temporal de unidades de escritura y lectura de DynamoDB, que con datapipeline también hubiese sido necesario.
 
 Infraestructura como código al poder. Al final, tuvimos que hacer algunos ajustes y realizar la importación completa de los datos un par de veces más. Fue increíblemente útil tenerlo todo preparado para con sólo tirar un par de comandos, dejarlo todo listo.
 
-Tenía ganas de escribir este artículo y compartir contigo mi experiencia en este asunto. Por norma general, me gusta tocar los entresijos y conocer las tripas de los sistemas, soy bastante partidario del _do it yourself_ y de la _configuración sobre convención_, pero también de utilizar sistemas ya construídos si la solución es rentable. No podemos pretender saber de todo.
+Tenía ganas de escribir este artículo y compartir contigo mi experiencia en este asunto. Por norma general, me gusta tocar los entresijos y conocer las tripas de los sistemas, soy bastante partidario del _do it yourself_ y de la _configuración sobre convención_, pero también de utilizar sistemas ya construidos si la solución es rentable. No podemos pretender saber de todo.
 
 Gracias por llegar al final. Espero que te sea útil en algún momento ;)

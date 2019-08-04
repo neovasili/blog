@@ -1,5 +1,5 @@
 ---
-title: Hexo serverless blog (part 1)
+title: Hexo serverless blog (part 2)
 date: 2019-07-15 11:00:00
 lang: es
 label: 
