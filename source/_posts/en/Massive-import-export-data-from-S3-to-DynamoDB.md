@@ -1,7 +1,7 @@
 ---
 title: Massive import/export data from S3 to DynamoDB
 date: 2019-07-15 23:51:46
-lang: es
+lang: en
 label: massive-import-s3-dynamodb
 tags: 
     - aws

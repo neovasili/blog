@@ -2,25 +2,25 @@
 title: Cookies
 date: 2019-07-06 12:37:43
 ---
-Este blog es personal, escribo en él con fines divulgativos de mis experiencias y aprendizajes en el mundo del desarrollo web y la tecnología en general así que no necesito tus datos para nada, puedes estar tranquilo/a ;)
+This blog is personal, I write in it for informative purposes about my experiences and learnings in the world of web development and technology in general so I don't need your data at all, you can rest easy ;)
 
-No obstante, me obligan a informarte de la obviedad de que este blog utiliza cookies y cuáles son. Esto resulta bastante absurdo porque salvo que haya implementado yo manualmente (cosa que no he hecho) alguna cookie personalizada, es fácil descubrir qué cookies se te están instalando y buscar información sobre ellas. Cualquier navegador de hoy en día tiene algún mecanismo para ver qué cookies se almacenan cuando estás en una página determinada. Por ejemplo:
+However, they oblige me to inform you of the obviousness that this blog uses cookies and what they are. This is quite absurd because unless I have manually implemented (which I have not done) some personalized cookie, it is easy to discover which cookies are being installed and search for information about them. Any browser today has some mechanism to see what cookies are stored when you are on a certain page. For example:
 *  [Google chrome](https://developers.google.com/web/tools/chrome-devtools/storage/cookies)
 *  [Firefox](https://developer.mozilla.org/en-US/docs/Tools/Storage_Inspector)
 *  [Safari](https://apple.stackexchange.com/questions/295970/how-can-i-check-the-cookie-in-the-safari)
 
-Básicamente lo que podrás encontrar son las cookies de google analytics y del componente que uso para los comentarios.
+Basically what you can find are the google analytics cookies and the component I use for comments.
 
-Como se tratan de cookies de terceros y estas pueden cambiar con el tiempo, no quisiera perder el tiempo tratando de explicar todas y cada una de las cookies que hay y estar pendiente de modificarlas cuando cambien, así que realizaré una explicación breve de ambos bloques y te indicaré dónde puedes profundizar más sobre el tema.
+As these are third-party cookies and these can change over time, I would not want to waste time trying to explain each and every one of the cookies that there are and be aware of modifying them when they change, so I will make a brief explanation of both blocks and I will tell you where you can go further on the subject.
 
 ## Google analytics
 
-Como seguramente sabrás, google analytics se utiliza principalmente para hacer seguimiento de los usuarios que llegan a una página web contando cuántas veces y cuándo la visitan. Así, yo puedo obtener estadísticas de la gente que llega a mi blog y desde dónde llegan. Cuáles son los posts más visitados, o si lo que escribo llega a más o menos gente, algo de **analítica web**, vaya. En definitiva, si tiene sentido lo que estoy haciendo y el cómo lo hago.
+As you surely know, google analytics is mainly used to track the users who arrive at a web page by counting how many times and when they visit it. Thus, I can obtain statistics of the people who come to my blog and where they come from. What are the most visited posts, or if what I write reaches more or fewer people, some **web analytics**, go. In short, if it makes sense what I am doing and how I do it.
 
-Puedes tener más detalles de las cookies concretas que se crean y su utilidad en la página oficial de google para ello: [Cookies google analytics](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage?hl=es-419).
+You can have more details of the specific cookies that are created and their usefulness on the official google page for this: [Cookies google analytics](https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage?hl=es-419).
 
-## Disqus (componente para comentarios)
+## Disqus (comments component)
 
-Disqus, al igual que google analytics, se trata de un componente de terceros que he decidido instalar en mi blog para facilitar las cosas. Sirve para poder introducir comentarios en los posts de una página web estática (como esta), pero para ello, se han de cargar algunas cosas del otro proveedor y también permite estar identificado para realizar los comentarios, por lo que podrían instalarse otras cookies típicas, como las de twitter, google accounts o facebook.
+Disqus, like google analytics, is a third party component that I have decided to install on my blog to make things easier. It is used to introduce comments on the posts of a static web page (like this one), but for this, some things from the other provider have to be loaded and it also allows you to be identified to make comments, so other typical cookies could be installed, like those of twitter, google accounts or facebook.
 
-En cualquier caso, al final de cada artículo tienes la sección de comentarios y en ella, aparece el enlace con la política de privacidad de disqus, que contiene la información relativa a las cookies. No obstante, te dejo aquí el enlace directo: [Cookies disqus](https://disqus.com/data-sharing-settings/).
+In any case, at the end of each article you have the comments section and in it, the link with the disqus privacy policy appears, which contains the information related to cookies. However, I leave you here the direct link: [Cookies disqus](https://disqus.com/data-sharing-settings/).

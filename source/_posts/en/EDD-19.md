@@ -1,7 +1,7 @@
 ---
 title: Extremadura Digital day 2019
 date: 2019-10-06 19:00:00
-lang: es
+lang: en
 label: events
 tags: 
     - aws
