@@ -16,7 +16,7 @@ I'm a huge cinema fan, I have seen an absurd quantity of movies and many other s
 
 But if there is a hobby / hobby that stands out in me, it is video games. I've been _playing Martians_ for as long as I can remember, and will continue to do so as long as I can. Thanks to this, I have lived hundreds of unforgettable experiences and I have learned a lot. Not surprisingly, I have a huge collection of games, consoles and the most varied gossip, worthy of any collector worth their salt.
 
-Even I have spent many years away from another of my great hobbies, lately I have been fortunate to be able to take it up again little by little and the facts is that the _legos_ are not cheap, but they provide endless hours of fun, concentration, creativity and learning.
+Even though I have spent many years away from another of my great hobbies, lately I have been fortunate to be able to take it up again little by little and the fact is that the _legos_ are not cheap, but they provide endless hours of fun, concentration, creativity and learning.
 
 On a professional level, I have played many suits, almost all around web development and although I am more of a _backend guy_ the truth is that every time I have been opting more and more towards the dark side, the sewers. Terminals have become my greatest allies, understanding cloud computing (AWS) my mantra, and systems architecture my specialty.
 

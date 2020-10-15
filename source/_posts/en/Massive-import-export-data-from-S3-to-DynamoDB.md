@@ -15,138 +15,141 @@ categories: data-migration
 ---
 ![](/images/s3-to-dynamodb.jpg)
 
-Para empezar, quería escribir al menos un post explicando cómo había sido esto de crear un blog serverless, pero lo cierto es que me apetecía escribir primero este post. Hace algún tiempo que lo tengo en mente.
+To begin with, I wanted to write at least one post explaining how it had been to create a serverless blog, but the truth is that I wanted to write this post first. I've had it in mind for some time.
 
-Esta es una de esas historias que se escriben solas.
+This is one of those stories that write themselves.
 
-Prácticamente el primer día en la ofi. Me siento, y a los pocos minutos cuando aún no había casi ni configurado la cuenta del correo corporativo, un compañero me hace una pregunta: 
+Practically the first day in the office. I sit down, and after a few minutes when I had not yet set up the corporate email account, a colleague asks me a question:
 
+**My buddy** - _"hey, they told me that Amazon thing, for you it's a piece of cake, right?"_
 
-**Compitrueno** - _"oye, me han dicho que esto de Amazon, tu controlas, ¿no?"_
+**Me** - _"well, I know something"_ - prudence to the power -
 
-**Yo** - _"bueno, algo sé"_ - la prudencia al poder -
+**My buddy** - _"you see, we have a project I'm working on, we have to load a lot of data into a dynamodb table"_ - a csv or data that could be easily taken to a csv - _"And we are doing it with the 25 by 25 using the SDK, but I get that this is very slow, do you know if there is any other way to do it that is faster?"_
 
-**Compitrueno** - _"es que verás, tenemos un proyecto en el que estoy trabajando, que tenemos que cargar en una tabla de dynamodb un montón de datos"_ - un csv o datos que podían llevarse fácilmente a un csv - _"y lo estamos haciendo con el SDK de 25 en 25, pero me da que esto va muy lento, ¿sabes si hay alguna otra forma de hacerlo que sea más rápida?"_
+**Me** - Interestingly, I had been preparing for the AWS Big Data certification a few weeks ago - which I failed like a champion - and I remember something. _"Yes, it sounds to me that there is something to do massively. Let me see if I can find it and tell you"_.
 
-**Yo** - Curiosamente, había estado hace pocas semanas preparando la certificación de Big data de AWS - que suspendí como un campeón - y me sonaba que había algo. _"Sí, me suena que hay algo para hacerlo de forma masiva. Déjame un rato a ver si lo encuentro y te digo"_.
 <!-- more -->
 
-Efectivamente, con una simple búsqueda, localicé algunos enlaces entre los que estaba uno de la propia documentación oficial de AWS que se hacía usando datapipeline. Se lo comenté a mi compi, y me dijo que no era necesario todavía, así que el tema se quedó ahí y lo retomamos más adelante.
+Indeed, with a simple search, I located some links among which was one of the official AWS documentation that was made using datapipeline. I mentioned it to my friend, and he told me that it was not necessary yet, so the subject stayed there and we took it up again later.
 
 ___
-**TL;DR** Clonar [mi repositorio de github](https://github.com/neovasili/dms-s3-import-to-dynamodb.git) y seguir los pasos del readme ;)
+**TL;DR** Clone [my github repository](https://github.com/neovasili/dms-s3-import-to-dynamodb.git) and follow the readme steps in there ;)
 ___
 
 ## Discovery phase
 
-Siendo una solución de la propia AWS, confié en que sería lo más óptimo y probablemente la más sencilla de implementar (sí, me he leído, a veces parece que no he aprendido nada con el paso de los años...), así que me puse a ello.
+Being a solution from AWS itself, I trusted that it would be the most optimal and probably the easiest to implement (yes, I have read myself, sometimes it seems that I have not learned anything over the years ...), so I got to it.
 
-De las primeras cosas que me empezaron a chirriar fue que **datapipeline**, aunque tenía soporte nativo para s3 y dynamodb, por debajo, se levanta un cluster de **EMR** (AWS Elastic Map Reduce), algo que así de primeras, se me antojaba excesivo para nuestro caso de uso. No obstante, tenía sentido, si lo que íbamos a importar era una gran cantidad de datos.
+One of the first things that started to squeak at me was that **datapipeline**, although it had native support for s3 and dynamodb, below it, a cluster of **EMR** (AWS Elastic Map Reduce) is raised, something like this, sounds excessive to me for our use case. However, it made sense, if what we were going to import was a large amount of data.
 
-Aunque los había estudiado, era la primera vez que usaba ambos servicios, así que al principio no entendía muy bien cómo funcionaban. Leí algo de documentación y encontré algún esquema que me aclaró un poco más el tema. Acto seguido, me puse a "catarlo".
+Although I had studied them, it was my first time using both services, so at first I didn't really understand how they worked. I read some documentation and found some scheme that clarified the subject a little more. Immediately afterwards, I began to "taste it".
 
-Segunda cosa que me chirriaba. El invento, tardaba más de 30 minutos sólo en levantarse y otros 15 en morir algo que, por otra parte, era lógico teniendo en cuenta que el cluster tenía tres nodos bastante tochos con mucha fontanería que no me apetecía entender demasiado. Esto iba a suponer un coste importante si se tenía que mantener levantado mucho rato, pero se suponía que iba a ser una sola carga (iluso de mí) y que con toda esa potencia no iba a llevar mucho tiempo.
+Second thing that squealed at me. The invention took more than 30 minutes just to get up and another 15 to die, something that, on the other hand, was logical considering that the cluster had three very thick nodes with a lot of plumbing that I did not want to understand too much. This was going to be a significant cost if it had to stay up for a long time, but it was supposed to be a single load (I was deluded) and that with all that power it was not going to take long.
 
-Y tanto. El proceso de importación con un fichero de pruebas de 120 mil tuplas, a penas llevaba 15 o 20 segundos, pero petaba como una palomita. Lo peor, es que no veía de forma clara dónde estaba el pete y al tercer intento, se me empezaron a hinchar las venas del cráneo y pensé que tenía que haber algo más simple que pudiera servir también.
+And so much. The import process with a test file of 120 thousand tuples, hardly took 15 or 20 seconds, but it hit like popcorn. The worst thing is that I didn't see clearly where the explosion was and on the third try, the veins in my skull began to swell and I thought there had to be something simpler that could work as well.
 
 ## DMS
 
-Rebuscando en los avernos encontré [un post del blog oficial de AWS](https://aws.amazon.com/es/blogs/database/migrate-delimited-files-from-amazon-s3-to-an-amazon-dynamodb-nosql-table-using-aws-database-migration-service-and-aws-cloudformation/) que decía que se podía usar **AWS Database Migration Service** (DMS) para utilizar como fuente s3 y destino dynamodb. Así que parecía que había otra alternativa con buena pinta.
+Searching in the hell I found [a post from the official AWS blog](https://aws.amazon.com/es/blogs/database/migrate-delimited-files-from-amazon-s3-to-an-amazon-dynamodb-nosql-table-using-aws-database-migration-service-and-aws-cloudformation/) which said that you could use **AWS Database Migration Service** (DMS) to use s3 source and dynamodb target. So it seemed like there was another good looking alternative.
 
-Me puse manos a la obra y vi que efectivamente en la documentación oficial DMS permitía configurar s3 como [_source endpoint_](https://docs.aws.amazon.com/es_es/dms/latest/userguide/CHAP_Source.S3.html) y como [_target endpoint_](https://docs.aws.amazon.com/es_es/dms/latest/userguide/CHAP_Target.DynamoDB.html) dynamodb.
+I got down to work and saw that indeed in the official DMS documentation it allowed to configure s3 as [_source endpoint_](https://docs.aws.amazon.com/es_es/dms/latest/userguide/CHAP_Source.S3.html) and DynamoDB as [_target endpoint_](https://docs.aws.amazon.com/es_es/dms/latest/userguide/CHAP_Target.DynamoDB.html).
 
-Ni que decir tiene, que este mismo proceso puede realizarse a la inversa y elegir dynamodb como fuente y s3 como destino, de ahí que en el título haya puesto _import/export_, pero me centraré en el _import_, ya que fue el origen de esta historia.
+Needless to say, this same process can be done in reverse and choose dynamodb as source and s3 as destination, hence in the title I have put _import / export_, but I will focus on the _import_, since it was the origin of this history.
 
 ## Terraform
 
-En aras de que todo este invento sea reutilizable y también que puedas eliminar todos los recursos que vas a crear una vez que ya no los necesites de forma sencilla, utilicé la conocida herramienta de infraestructura como código [terraform](https://www.terraform.io).
+In order that all this invention is reusable and also that you can eliminate all the resources that you are going to create once you no longer need them in a simple way, I used the well-known infrastructure as code tool [terraform](https://www.terraform.io).
 
-La primera vez, en realidad, lo hice porque para poder probar que todo funcionaba bien, lo hice en una cuenta de AWS que teníamos para pruebas y quería que fuese fácilmente exportable a la cuenta de producción donde luego lo usaríamos. Un paso inteligente por mi parte.
+The first time, actually, I did it because in order to test that everything was working fine, I did it in an AWS account that we had for testing and I wanted it to be easily exportable to the production account where we would use it later. A smart move on my part.
 
-Tienes en mi repo de github todo el código terraform de ejemplo utilizado en este artículo para que lo descargues y lo apliques sobre la marcha: https://github.com/neovasili/dms-s3-import-to-dynamodb.
+You have in my github repo all the example terraform code used in this article for you to download and apply on the fly: https://github.com/neovasili/dms-s3-import-to-dynamodb.
 
 ### Source endpoint
 
-Configurar s3 como endpoint fuente, viene a ser algo como esto:
+Configure s3 as a source endpoint, it comes to something like this:
 {% gist 10bcee0928a76d53e467ff923ffaa568 %}
 
-Lo más destacado es la **estructura de tabla** (_external_table_definition_), que no es ni más ni menos que un fichero json que define la estructura de datos del csv. Por ejemplo:
+The highlight is the **table structure** (_external_table_definition_), which is neither more nor less than a json file that defines the data structure of the csv. For example:
 
 {% ghcode https://github.com/neovasili/dms-s3-import-to-dynamodb/blob/master/files/extra_connection_attributes.json %}
 
-En esta estructura caben destacar los atributos:
-*  **TableName**. Como su nombre indica es el nombre de la tabla origen.
-*  **TablePath**. DMS para funcionar con S3 requiere que los ficheros tengan un path mínimo específico, donde éste será: `schema_name/table_name` y de ahí el atributo anterior. Así, la estructura mínima que necesitas en tu bucket de S3 para que funcione con DMS es: `bucket_name/schema_name/table_name/*.csv`.
+In this structure, these attributes should be highlighted:
+
+* **TableName**. As its name indicates it is the name of the source table.
+* **TablePath**. DMS to work with S3 requires that the files have a specific minimum path, where this will be: `schema_name / table_name` and hence the previous attribute. Thus, the minimum structure you need in your S3 bucket to work with DMS is: `bucket_name/schema_name/table_name/*.csv`.
 
 ### Target endpoint
 
-Éste es mucho más simple:
+This is a lot of simpler:
 
 {% gist e6611f3300b32635600960617c3061fd %}
 
 ### Replication instance
 
-Aparte del nombre se pueden configurar cosas como la VPC en la que estará - sino se especifica se crea en la que te da AWS por defecto - el tamaño de disco, la versión del motor DMS de la instancia - yo usaría la última siempre que sea posible- si estará en multi-az o si estará accesible públicamente, entre otras cosas.
+Apart from the name, you can configure things like the VPC in which it will be - if it is not specified, it is created in the one that AWS gives you by default - the disk size, the version of the instance's DMS engine - I would use the latter whenever it is possible - if it will be in multi-az or if it will be publicly accessible, among other things.
 
-En este punto puedes elegir también el **tamaño de la instancia** de replicación. Por defecto aparece seleccionada una dms.t2.medium, pero puedes modificarla según te parezca. Hay que tener en cuenta también la [capa gratuita](https://aws.amazon.com/es/dms/free-dms/), sino, los precios están disponibles aquí: https://aws.amazon.com/es/dms/pricing/.
+At this point you can also choose the **size of the replication instance**. By default a dms.t2.medium is selected, but you can modify it as you see fit. We must also take into account the [free tier](https://aws.amazon.com/es/dms/free-dms/), otherwise, the prices are available here: https://aws.amazon.com/es/dms/pricing/.
 
-También es importante que consideres que cuanto mayor sea la instancia de replicación, mayor _throughput_ de red tendrás y por tanto más rápido podrás enviar datos a DynamoDB. Esto también está condicionado, obviamente, por la capacidad de escritura y lectura que le des a la tabla destino.
+It is also important that you consider that the larger the replication instance, the greater the network throughput you will have and therefore the faster you will be able to send data to DynamoDB. This is also conditioned, obviously, by the writing and reading capacity that you give to the target table.
 
 {% gist e258d7f23e22a69c7c66166ebf6fa0f0 %}
 
-Ese _depends on_ del rol, a día de hoy, no funciona como se espera. Cuando empecé con esto, me di cuenta del problema que había y lo reporté, pero no parece que esté resuelto tal como puedes comprobar en el [hilo de la issue](https://github.com/hashicorp/terraform/issues/20346) y en [el que se generó](https://github.com/terraform-providers/terraform-provider-aws/issues/7748) a partir de éste.
+That _depends on_ whether the role, as of today, does not work as expected. When I started with this, I realized the problem was there and reported it, but it does not seem to be solved as you can see in the [issue thread](https://github.com/hashicorp/terraform/issues/20346) and [the one created](https://github.com/terraform-providers/terraform-provider-aws/issues/7748) from this.
 
-El _workaround_ en este caso es tan sencillo como hacer `terraform apply` una vez - te dará error al crear la instancia de replicación - y volver a ejecutar `terraform apply` para que se creen todos los elementos que no se crearon en el primer paso.
+The _workaround_ in this case is as simple as doing `terraform apply` once - it will give you an error when creating the replication instance - and running `terraform apply` again so that all the elements that were not created in the first step are created.
 
-Importante también, que el nombre de rol que va en ese _depends on_ tiene que tener un nombre específico y muy concreto: `dms-vpc-role`. Si por algún motivo, le pones otro nombre, cambias los guiones por guiones bajos o le añades algún tipo de prefijo/sufijo, aquello no funciona, así de simple.
+It is also important that the role name that goes in _depends on_ having a specific and very concrete name: `dms-vpc-role`. If for some reason, you give it another name, change the hyphens to underscores or add some type of prefix / suffix, that does not work, that simple.
 
 ### Replication task
 
-Por último, la parte más importante, la tarea de replicación.
+Lastly, the most important part, the replication task.
 
-Básicamente, va a ser lo que conecta todas las piezas y pone tu proceso de importación en marcha. También se define el tipo de replicación a llevar a cabo. DMS te da tres tipos:
-*  **Migrate existing data**. Una única carga masiva de datos desde el origen al destino. Es la que describo en este artículo.
-*  **Migrate existing data and replicate ongoing changes**. Realiza una carga masiva inicial desde origen a destino y luego va replicando los cambios que vayan entrando. Acojonantemente útil.
-*  **Replicate data changes only**. No realiza carga inicial, sólo replica entre origen y destino.
+Basically, it's going to be what connects all the pieces together and gets your import process going. The type of replication to be carried out is also defined. DMS gives you three types:
+
+* **Migrate existing data**. A single bulk load of data from source to destination. It is the one I describe in this article.
+* **Migrate existing data and replicate ongoing changes**. It carries out an initial bulk load from origin to destination and then replicates the changes that are coming in. Shockingly useful.
+* **Replicate data changes only**. Does not perform initial load, only replicates between origin and destination.
 
 {% gist a9b3648dfad923e4a790f6f904ad1357 %}
 
-Aquí, además de conectar los elementos antes descritos, tienes que considerar un par cosas:
-*  **Ajustes** de la tarea de replicación. Fichero json con múltiples ajustes avanzados de la tarea. Lo que te puede interesar de esto es la definición del loggroup y logstream de cloudwatch -inicialmente tienen que estar vacíos, así que para setearlos debes hacerlo una vez creada la tarea - para que puedas llevar trazabilidad de lo que sucede en tus tareas de replicación.
-*  **Mappings** de las tablas. Es decir, qué columnas corresponden desde el origen, con qué columnas en el destino. Por ejemplo:
+Here, in addition to connecting the elements described above, you have to consider a couple of things:
+
+* **Settings** of the replication task. Json file with multiple advanced task settings. What may interest you in this is the definition of the cloudwatch loggroup and logstream -initially they have to be empty, so to set them you must do it once the task is created - so that you can track what happens in your replication tasks.
+* **Mappings** of the tables. That is, which columns correspond from the source, with which columns at the destination. For example:
 
 {% ghcode https://github.com/neovasili/dms-s3-import-to-dynamodb/blob/master/files/table_mappings.json %}
 
-Existe en DMS una versión GUI de este mapping, pero sinceramente a mi me parece más liosa que con el json, aunque también es cierto que existe poca documentación sobre la estructura de este json, así que _have it your way_ ;)
+There is a GUI version of this mapping in DMS, but honestly it seems more confusing to me than with json, although it is also true that there is little documentation on the structure of this json, so _have it your way_;)
 
-Lo que tienes que saber de este json es que en los dos primeros bloques se referencia a la "tabla" origen - recuerda que teníamos _schema_name_ y _table_name_ - y en el tercer bloque referenciamos al destino.
+What you have to know about this json is that the first two blocks refer to the source "table" - remember that we had _schema_name_ and _table_name_ - and in the third block we reference the destination.
 
-En este último bloque, además, es donde decimos qué atributos del origen - los que están referenciados con el doble dolar - corresponden con los del destino.
+In this last block, in addition, it is where we say which attributes of the origin - those that are referenced with the double dollar - correspond to those of the destination.
 
 ### Run and teardown
 
-Una vez que ya tengas toda la infraestructura en marcha, y los ficheros .csv en su sitio, sólo tienes que arrancar la tarea de replicación bien desde la consola web de AWS o bien vía aws cli.
+Once you have all the infrastructure up and running, and the .csv files in place, you just have to start the replication task either from the AWS web console or via aws cli.
 
-Cuando acabes tus tareas de replicación/importación/exportación, puedes prenderle fuego a todo con `terraform destroy`, pero has de tener en cuenta que **habrá un par de cosas que no se te van a eliminar**: los logs de cloudwatch y la tabla en DynamoDB de exclusiones.
+When you're done with your replication / import / export tasks, you can set everything on fire with `terraform destroy`, but you have to bear in mind that **there will be a couple of things that will not be eliminated**: the cloudwatch logs and the exclusions table in DynamoDB.
 
-Este último elemento lo crea DMS cuando se activa una tarea de replicación por primera vez. Se supone que DMS enviará ahí todo aquello que por el motivo que sea, no haya podido replicar del origen al destino.
+This last item is created by DMS when a replication task is triggered for the first time. It is assumed that DMS will send there everything that for whatever reason has not been able to replicate from source to destination.
 
-Tras haber usado varias veces este procedimiento nunca se me ha enviado nada a esa tabla, pero entiendo que puede llegar a suceder. Tenlo en cuenta.
+After using this procedure several times, nothing has ever been sent to that table, but I understand that it can happen. Keep that in mind.
 
 ## Conclusions
 
-Vale, ya sé que es un post largo y que parece bastante complejo, pero con estas indicaciones, en nada que lo uses una vez, verás que DMS es una herramienta muy potente, que soluciona un problema que puede parecer estúpido a simple vista, pero que sin embargo nos ahorra muchos dolores de cabeza y tiempo.
+Ok, I know that it is a long post and that it seems quite complex, but with these indications, in nothing that you use it once, you will see that DMS is a very powerful tool, which solves a problem that may seem stupid at first glance, but which however saves us a lot of headaches and time.
 
-No recuerdo exactamente el tiempo que duró el proceso completo de importación con los datos reales, fueron unas pocas horas, pero sí recuerdo que la estimación que hicimos con el "proceso manual" se iba a más de una semana importando datos.
+I do not remember exactly how long the entire import process lasted with the real data, it was a few hours, but I do remember that the estimate we made with the "manual process" was more than a week importing data.
 
-Para nuestro caso de uso usamos una instancia tipo dms.t2.large y subimos el aprovisionamiento de DynamoDB a 300 unidades de escritura y 1000 de lectura. Me gustaría en algún momento hacer más pruebas jugando con estos valores para comparar resultados.
+For our use case we use an instance type dms.t2.large and we raise the provisioning of DynamoDB to 300 units of writing and 1000 units of reading. I would like at some point to do more tests playing with these values ​​to compare results.
 
-DMS, aparte de los logs, también tiene un pequeño _dashboard_ que te permite monitorizar el proceso.
+DMS, apart from logs, also has a small _dashboard_ that allows you to monitor the process.
 
-No pongo en duda la utilidad de la solución EMR + datapipeline, pero tengo claro que, en este caso, esta solución es mucho más optima en cuanto a tiempos y a costes. Con DMS el único coste que se asumió fue el aprovisionamiento temporal de unidades de escritura y lectura de DynamoDB, que con datapipeline también hubiese sido necesario.
+I do not doubt the usefulness of the EMR + datapipeline solution, but I am clear that, in this case, this solution is much more optimal in terms of time and costs. With DMS the only cost that was assumed was the temporary provisioning of DynamoDB read and write units, which with datapipeline would also have been necessary.
 
-Infraestructura como código al poder. Al final, tuvimos que hacer algunos ajustes y realizar la importación completa de los datos un par de veces más. Fue increíblemente útil tenerlo todo preparado para con sólo tirar un par de comandos, dejarlo todo listo.
+Infrastructure as code to power. In the end, we had to make some adjustments and do the full import of the data a couple more times. It was incredibly useful to have everything set up so that just by throwing a couple of commands, it was all set.
 
-Tenía ganas de escribir este artículo y compartir contigo mi experiencia en este asunto. Por norma general, me gusta tocar los entresijos y conocer las tripas de los sistemas, soy bastante partidario del _do it yourself_ y de la _configuración sobre convención_, pero también de utilizar sistemas ya construidos si la solución es rentable. No podemos pretender saber de todo.
+I was looking forward to writing this article and sharing my experience with you on this matter. As a general rule, I like to touch the ins and outs and know the guts of the systems, I am quite in favor of _doing it yourself_ and _configuration over convention_, but also of using already built systems if the solution is profitable. We cannot pretend to know everything.
 
-Gracias por llegar al final. Espero que te sea útil en algún momento ;)
+Thanks for reaching the end. I hope it is useful to you sometime ;)
