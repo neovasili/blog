@@ -1,27 +1,27 @@
 ---
-title: Sobre mí
+title: About me
 date: 2019-06-20 21:18:32
 ---
-![En Brooklyn, con vistas a Manhatan](../images/about-me.jpg "Simplemente yo")
+![In Brooklyn, overlooking to Manhatan](../images/about-me.jpg "Just me")
 
-Como supongo que le pasa a todo el mundo, definirme no es nada sencillo, tengo la mala costumbre de tratar de querer decir más cosas de las que realmente son asimilables en un corto período de tiempo, así que trataré de ser breve, aunque no será fácil.
+I suppose it happens to everyone, but defining myself is not easy at all, I have a bad habit of trying to tell more things than are really assimilable in a short period of time, so I will try to be brief, although it won't be easy.
 
-Nací en Málaga, aunque muchos dicen que es mentira, hasta que les muestro el dni. Pasé una parte importante de mi vida en Almuñécar y vine a estudiar a Cáceres, donde actualmente tengo mi vida entera. Cuando me lo preguntan, suelo decir: _"Nacido en Málaga, Almuñequero de toda la vida y Cacereño de corazón"_.
+I was born in Malaga, but some people probably say it is a lie, until I show them my ID. I spent an important part of my life in Almuñécar and I came to study in Cáceres, where I currently have my entire life. When they ask me, I usually say: _"Born in Malaga, a lifelong in Almuñécar and from Cáceres in spirit."_
 
-La foto que encabeza este artículo es del pasado octubre de 2018. Es una foto normal, en la que se ve de fondo Manhatan y el puente de Brooklyn. Nueva York siempre fué una ciudad que quise visitar y en 2018 cumplí ese sueño. 
+The photo that heads this article is from last October 2018. It is a normal photo, in which you can see Manhatan and the Brooklyn Bridge in the background. New York has always been a city that I wanted to visit and in 2018 I fulfilled that dream.
 
-Siempre he bebido mucho de la cultura estadounidense, al menos de la que trataban de vendernos por la televisión y en las películas, así que tengo una gran predilección por las barras y las estrellas. Supongo que también en parte por haber nacido en el 83 y haber vivido la época dorada de Hollywood, el cine de acción y el derroche de efectos especiales.
+I've always had a lot to drink from American culture, at least from what they tried to sell us on television and in movies, so I have a great predilection for the stars and stripes. I guess also partly because I was born in '83 and lived through the golden age of Hollywood, action movies and the abuse of special effects.
 
-Me chifla el cine, he visto no se cuantas mil películas y otras tantas series. Fruto de ello, es la razón de ser de mi "nick" (no sé si esa palabra ya suena muy _old-school_) que no es ni más ni menos que la unión de dos de mis personajes favoritos: Neo (interpretado por Keanu Reeves en Matrix) y Vasili Záitsev (interpretado por Jude Law en Enemigo a las puertas) --> _NeoVasili_.
+I'm a huge cinema fan, I have seen an absurd quantity of movies and many other series. As a result, it is the reason for my “nickname” (I don't know if that word already sounds very _old-school_) which is neither more nor less than the union of two of my favorite characters: Neo (played by Keanu Reeves in The Matrix) and Vasili Záitsev (played by Jude Law in Enemy at the Gates) -> _NeoVasili_.
 
-Pero si hay una afición / hobby que destaca en mí son los videojuegos. Llevo _jugando a los marcianitos_ desde que tengo memoria, y seguiré haciéndolo mientras pueda. Gracias a ello, he vivido cientos de experiencias inolvidables y he aprendido mucho. No en vano, dispongo de una colección enorme de juegos, consolas y chismes de lo más variopintos, digno de cualquier coleccionista que se precie.
+But if there is a hobby / hobby that stands out in me, it is video games. I've been _playing Martians_ for as long as I can remember, and will continue to do so as long as I can. Thanks to this, I have lived hundreds of unforgettable experiences and I have learned a lot. Not surprisingly, I have a huge collection of games, consoles and the most varied gossip, worthy of any collector worth their salt.
 
-Aunque he pasado muchos años alejados de otra de mis grandes aficiones, últimamente he tenido la suerte de poder ir retomándola poco a poco y es que los _lego_ no son nada baratos, pero proporcionan interminables horas de diversión, concentración, creatividad y aprendizaje.
+Even though I have spent many years away from another of my great hobbies, lately I have been fortunate to be able to take it up again little by little and the fact is that the _legos_ are not cheap, but they provide endless hours of fun, concentration, creativity and learning.
 
-A nivel profesional, he tocado muchos palos, casi todos alrededor del desarrollo web y aunque soy más de _backend_ lo cierto es que cada vez me he ido decantando más y más hacia el lado oscuro, las alcantarillas. Los terminales se han convertido en mis mayores aliados, el entendimiento del cloud computing (AWS) en mi mantra y la arquitectura de sistemas mi especialidad.
+On a professional level, I have played many suits, almost all around web development and although I am more of a _backend guy_ the truth is that every time I have been opting more and more towards the dark side, the sewers. Terminals have become my greatest allies, understanding cloud computing (AWS) my mantra, and systems architecture my specialty.
 
-Sigo haciendo mucho de todo, y aunque ahora está muy de moda lo del "rol devops" que tan mal le sienta a algunos que se diga así, lo cierto es que yo respiro la cultura devops desde hace ya unos cuantos años. Cuando he podido la he aplicado en mi día a día y cuando no, pues me he ido adaptando a las circunstancias.
+I still do a lot of everything, and while the “devops role” is very fashionable now, which is so bad for some to say that, the truth is that I have breathed the devops culture for a few years now. When I could, I have applied it in my day to day life and when not, as I have adapted to the circumstances.
 
-No me quejo ni me arrepiento de ninguno de los pasos que he dado, siempre he sabido aprender algo de cada uno de ellos. Me apasiona la ciencia, siempre quise ser astronauta. He pasado una cantidad insultante de horas sobre el sillín de la bici pedaleando, me gustan los lugares a los que me ha llevado y la reconfortante sensación de llegar a casa tras varias horas poniendo al límite mi resistencia. Me encanta viajar, empaparme de otras culturas y descubrir la historia que encierran.
+I do not complain or regret any of the steps I have taken, I have always learned something from each of them. I'm passionate about science, I always wanted to be an astronaut. I have spent an insulting amount of hours on the bike saddle pedaling, I like the places it has taken me and the comforting feeling of coming home after several hours pushing my endurance to the limit. I love traveling, soaking up other cultures and discovering the history they contain.
 
-Pero si hay algo que me caracteriza, es que me encanta aprender, enfrentarme a nuevos retos, superarlos y seguir aprendiendo, aunque puede llegar a ser estresante, me gusta tener esa sensación de que hay tantas cosas por hacer y aprender, que no sabes hacia cuál poner el foco. Soy una mente inquieta como pocas.
+But if there is something that characterizes me, it is that I love to learn, face new challenges, overcome them and continue learning, although it can be stressful, I like to have that feeling that there are so many things to do and learn, that you don't know towards which to put the focus. I am a restless mind like few others.

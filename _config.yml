@@ -8,7 +8,7 @@ subtitle: welcome to hell, rookie!  # The subtitle of your website
 description:  # The description of your website
 keywords:  # Keywords of the website
 author: Juan Manuel Ruiz Fernández  # Author name
-language: [ 'es' ]  # default language
+language: [ 'en' ]  # default language
 timezone: Europe/Madrid  # Default timezone
 
 # URL
