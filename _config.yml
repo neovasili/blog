@@ -3,10 +3,10 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: the brick code  # The title of your website
-subtitle: welcome to hell, rookie!  # The subtitle of your website
+title: The Brick Code  # The title of your website
+subtitle: Welcome to hell, rookie!  # The subtitle of your website
 description:  # The description of your website
-keywords:  # Keywords of the website
+keywords:  aws,iac,code,lego,serverless # Keywords of the website
 author: Juan Manuel Ruiz Fernández  # Author name
 language: [ 'en' ]  # default language
 timezone: Europe/Madrid  # Default timezone
@@ -40,7 +40,7 @@ relative_link: false
 future: true
 highlight:
   enable: true
-  line_number: false
+  line_number: true
   auto_detect: true
   tab_replace: 
 
@@ -56,7 +56,7 @@ index_generator:
   path: ''
   per_page: 10
   order_by: -date
-  
+
 # Category & Tag
 default_category: uncategorized
 category_map:
