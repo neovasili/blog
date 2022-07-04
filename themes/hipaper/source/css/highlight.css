@@ -1,0 +1,25 @@
+.highlight .gutter .line {
+    color: #5d5d5d;
+}
+.highlight .code .hljs-keyword {
+    color: #fd7777;
+}
+.highlight .code .hljs-comment {
+    color: #5f5f5f;
+}
+.highlight .code .hljs-literal {
+    color: #d987f7;
+}
+.highlight .code .hljs-number {
+    color: #749af1;
+}
+.highlight .code .literal {
+    color: #f9e67d;
+}
+
+.highlight.json .code .attribute {
+    color: #82e3f0;
+}
+.highlight.json .code .literal {
+    color: #ffffff;
+}

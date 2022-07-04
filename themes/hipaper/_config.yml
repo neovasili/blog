@@ -12,7 +12,7 @@ menu:
 rss: /atom.xml
 
 # Put your favicon.ico into `hexo-site/themes/hipaper/source/` directory.
-favicon: css/images/favicon.ico
+favicon: css/images/favicon.png
 
 # Put your avatar.jpg into `hexo-site/themes/hipaper/source/` directory.
 # url is target link (E.g. `url: https://hexo.io/logo.svg` or `url: css/images/mylogo.jpg`)
@@ -71,7 +71,7 @@ wumii:
 # Available value:
 #    default | normal | night | night eighties | night blue | night bright
 # https://github.com/chriskempson/tomorrow-theme
-highlight_theme: normal
+highlight_theme: night eighties
 
 
 # widget behavior
