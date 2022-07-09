@@ -163,3 +163,13 @@ li.language {
         transform: rotate( -90deg );
     }
 }
+
+td.code {
+    width: 100%;
+}
+
+.article-entry code {
+    background: rgb(160 125 125 / 20%);
+    color: #c15e23;
+    padding: 0 0.3em;
+}

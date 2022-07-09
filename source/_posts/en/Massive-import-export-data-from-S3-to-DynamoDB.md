@@ -13,17 +13,17 @@ tags:
     - terraform
 categories: data-migration
 ---
-![](/images/s3-to-dynamodb.jpg)
+![ ](/images/s3-to-dynamodb.jpg)
 
 To begin with, I wanted to write at least one post explaining how it had been to create a serverless blog, but the truth is that I wanted to write this post first. I've had it in mind for some time.
 
-This is one of those stories that write themselves.
+This is one of those stories that they write themselves.
 
 Practically the first day in the office. I sit down, and after a few minutes when I had not yet set up the corporate email account, a colleague asks me a question:
 
 **My buddy** - _"hey, they told me that Amazon thing, for you it's a piece of cake, right?"_
 
-**Me** - _"well, I know something"_ - prudence to the power -
+**Me** - _"well, I know something"_ - prudence upfront -
 
 **My buddy** - _"you see, we have a project I'm working on, we have to load a lot of data into a dynamodb table"_ - a csv or data that could be easily taken to a csv - _"And we are doing it with the 25 by 25 using the SDK, but I get that this is very slow, do you know if there is any other way to do it that is faster?"_
 
@@ -150,6 +150,6 @@ I do not doubt the usefulness of the EMR + datapipeline solution, but I am clear
 
 Infrastructure as code to power. In the end, we had to make some adjustments and do the full import of the data a couple more times. It was incredibly useful to have everything set up so that just by throwing a couple of commands, it was all set.
 
-I was looking forward to writing this article and sharing my experience with you on this matter. As a general rule, I like to touch the ins and outs and know the guts of the systems, I am quite in favor of _doing it yourself_ and _configuration over convention_, but also of using already built systems if the solution is profitable. We cannot pretend to know everything.
+I was looking forward to writing this article and sharing my experience with you on this matter. As a general rule, I like to touch the ins and outs and know the guts of the systems. I am quite in favor of _doing it yourself_ and _configuration over convention_, but also of using already built systems if the solution is profitable. We cannot pretend to know everything.
 
 Thanks for reaching the end. I hope it is useful to you sometime ;)
