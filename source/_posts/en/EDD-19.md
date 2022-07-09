@@ -19,7 +19,7 @@ tags:
 categories: events
 ---
 
-![](/images/edd-2019.jpg)
+![ ](/images/edd-2019.jpg)
 
 This year, I have also had the opportunity to participate as a speaker in the most cutting-edge technological event of the moment in Extremadura, and I would like to share impressions and feelings about this year's experience on the blog.
 
