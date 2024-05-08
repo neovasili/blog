@@ -1,6 +1,6 @@
 ---
 title: Save transfer costs with managed NAT instances on AWS
-date: 2024-05-11 19:00:00
+date: 2024-05-8 10:00:00
 lang: en
 label: save-costs-nat-instances
 tags: 
@@ -36,7 +36,7 @@ Let's see a general diagram of the solution:
 
 ![Nat instances high level design diagram](/images/nat-instances-high-level-design.png)
 
-The design of this solution is partially based on the [Ben Whaley](https://medium.com/@benwhaley) explains in the post [How we reduced our AWS bill by seven figures](https://medium.com/life-at-chime/how-we-reduced-our-aws-bill-by-seven-figures-5144206399cb), although it contains some significant changes to how NAT instances are built and how they are replaced in case of failure or for maintenance.
+The design of this solution is partially based on the post by [Ben Whaley](https://medium.com/@benwhaley) explaining [How we reduced our AWS bill by seven figures](https://medium.com/life-at-chime/how-we-reduced-our-aws-bill-by-seven-figures-5144206399cb), although it contains some significant changes to how NAT instances are built and how they are replaced in case of failure or for maintenance.
 
 From a general point of view, the solution has four perfectly differentiated parts:
 
@@ -83,7 +83,7 @@ An interesting detail is that since the Lambdas are within our VPC network and t
 
 ## Workflows
 
-This is where the entire system contains the logic that we have been describing in the previous sections, that orchestration and automation that will greatly help us to minimize the management and maintenance of the system.
+This is where the entire system contains the logic that we have been describing in the previous sections, the orchestration and automation that will greatly help us to minimize the management and maintenance of the system.
 
 To orchestrate all these processes, we have chosen StepFunctions and their StateMachines using where possible the integration of StepFunctions with the different AWS services. This way, there is much less of your own code to maintain, since these integrations are managed and maintained by AWS.
 
